@@ -951,7 +951,7 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
-      z-index: 999;
+      z-index: 10001;
       animation: slideUpAzan 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -2004,12 +2004,12 @@
         <div class="update-notice-content">
           <span style="font-size: 20px;">✨</span>
           <div class="update-notice-text">
-            <strong>নতুন সংস্করণ v1.2.0 উপলব্ধ!</strong>
-            <span>টাইমজোন ও আযান ফিক্স, অডিও নোটিফিকেশন ও উন্নত রিমাইন্ডার।</span>
+            <strong>নতুন সংস্করণ v1.3.0 উপলব্ধ!</strong>
+            <span>বিটিভি আযান ভয়েস, ইন-অ্যাপ ও নোটিফিকেশন স্টপ বাটন এবং ইমেইল পরামর্শ।</span>
           </div>
         </div>
         <div class="update-notice-actions">
-          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.2.0/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.3.0/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
           <button class="update-dismiss-btn" onclick="dismissUpdateNotice()">✕</button>
         </div>
       </div>
@@ -2050,6 +2050,14 @@
           </div>
           <div class="azan-dua-virtue">
             <strong>ফজিলত:</strong> যে ব্যক্তি আযান শুনে এই দোয়া পাঠ করবে, কিয়ামতের দিন তার জন্য রাসুলুল্লাহ ﷺ-এর শাফায়াত ওয়াজিব হয়ে যাবে। (সহিহ বুখারি ৬১৪)
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-secondary" style="padding: 7px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.35); cursor: pointer;" onclick="playDuaBengaliAudio()">
+              <span>🔊</span> <span>বাংলা অর্থ শুনুন (Listen Meaning)</span>
+            </button>
+            <button class="btn-secondary" style="padding: 7px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;" onclick="copyAzanDuaText()">
+              <span>📋</span> <span>দোয়া ও অর্থ কপি করুন (Copy)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2426,25 +2434,50 @@
         <div class="setting-group-title" id="lbl-contact-title">পরামর্শ ও যোগাযোগ / Contact Developer</div>
         <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; text-align: center;">
           <p style="font-size: 0.84rem; color: #E2E8F0; margin-bottom: 12px; line-height: 1.45;" id="lbl-contact-desc">
-            আপনার যেকোনো মতামত, নতুন ফিচারের পরামর্শ বা ত্রুটি জানাতে সরাসরি আমাকে ইমেইল করতে পারেন:
+            আপনার যেকোনো মতামত, নতুন ফিচারের পরামর্শ বা ত্রুটি জানাতে সরাসরি ইমেইল পাঠাতে পারেন অথবা ঠিকানা কপি করে নিতে পারেন:
           </p>
-          <a href="mailto:grafigrowofficial@gmail.com?subject=Namaz%20Reminder%20App%20Feedback%20&%20Suggestions" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; text-decoration: none; border-radius: 20px; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
-            <span>✉️</span> <span>grafigrowofficial@gmail.com</span>
-          </a>
-          <span style="display: block; font-size: 0.72rem; color: var(--gold-light); margin-top: 8px;">
+          <div style="display: flex; flex-direction: column; gap: 8px; max-width: 300px; margin: 0 auto 10px;">
+            <button onclick="sendFeedbackEmail()" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 14px; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
+              <span>✉️</span> <span>সরাসরি ইমেইল পাঠান (Send Mail)</span>
+            </button>
+            <button onclick="copyFeedbackEmail()" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 18px; border-radius: 14px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.08); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.2);">
+              <span>📋</span> <span>ইমেইল কপি করুন (Copy Email)</span>
+            </button>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--gold-light); word-break: break-all;">
+            grafigrowofficial@gmail.com
+          </div>
+          <span style="display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 6px;">
             মোস্তাফিজ (Mustafiz) • আন্তরিকভাবে আপনার সুপরামর্শের অপেক্ষায় 🤲
           </span>
         </div>
       </div>
 
       <div class="setting-group">
-        <div class="setting-group-title" id="lbl-bg-title">Background Reminders &amp; Azan</div>
+        <div class="setting-group-title" id="lbl-bg-title">আযান ভয়েস ও রিমাইন্ডার (Azan Voice & Reminders)</div>
         <div class="setting-row">
           <div>
-            <div class="setting-label" id="lbl-test-notif">Test Notification &amp; Chime</div>
-            <div class="setting-desc" id="lbl-test-notif-desc">Test status bar notification and Azan chime</div>
+            <div class="setting-label" id="lbl-azan-voice-label">আযান ভয়েস (Azan Voice)</div>
+            <div class="setting-desc" id="lbl-azan-voice-desc">বিটিভি বা পছন্দের মুয়াজ্জিনের মধুর আযান বেছে নিন</div>
           </div>
-          <button class="btn-primary" style="padding: 8px 14px;" onclick="testAzanNotification()">🔔 Test Alert</button>
+          <select id="select-azan-voice" onchange="changeAzanVoice(this.value)">
+            <option value="btv">🇧🇩 বাংলাদেশ টেলিভিশন (BTV) - কারী ওবায়দুল্লাহ (ডিফল্ট)</option>
+            <option value="makkah">🕋 মক্কা মুকাররমা (Makkah - শায়খ আলী আহমদ মোল্লা)</option>
+            <option value="madinah">🕌 মদিনা মুনাওয়ারা (Madinah - মসজিদে নববী)</option>
+            <option value="alafasy">🎙️ মিশারী রাশিদ আল-আফাসী (Mishary Alafasy)</option>
+            <option value="aqsa">🇵🇸 বায়তুল মুকাদ্দাস (Al-Aqsa Mosque Jerusalem)</option>
+            <option value="chime">🔔 শান্তিদায়ক ইসলামিক চাইম (Gentle Chime)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-test-notif">আযান টেস্ট ও নিয়ন্ত্রণ (Azan Test & Stop)</div>
+            <div class="setting-desc" id="lbl-test-notif-desc">নির্বাচিত আযান বাজিয়ে টেস্ট করুন বা থামান</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-primary" style="padding: 8px 12px; font-size: 0.82rem;" onclick="testSelectedAzanVoice()">🔔 টেস্ট আযান</button>
+            <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.82rem; background: #EF4444; color: #FFFFFF; border: 1px solid rgba(255, 255, 255, 0.3);" onclick="stopActiveAzan()">⏹️ আযান থামান</button>
+          </div>
         </div>
       </div>
 
@@ -3592,35 +3625,127 @@
     /* ================= REAL AZAN AUDIO & NOTIFICATIONS ================= */
     let isAzanCurrentlyPlaying = false;
 
+    const AZAN_VOICES = {
+      btv: {
+        id: "btv",
+        name: "BTV Bangladesh (Qari Obaidullah)",
+        bn: "বাংলাদেশ টেলিভিশন (BTV) - কারী ওবায়দুল্লাহ",
+        url: "azan.mp3"
+      },
+      makkah: {
+        id: "makkah",
+        name: "Makkah Haramain (Sheikh Ali Ahmed Mulla)",
+        bn: "মক্কা মুকাররমা (শায়খ আলী আহমদ মোল্লা)",
+        url: "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Ali_Ibn_Ahmad_Mala_1_-_Al_Haram_Al_Maki_(علي_بن_أحمد_ملا_-_الحرم_المكي).mp3"
+      },
+      madinah: {
+        id: "madinah",
+        name: "Madinah Masjid an-Nabawi",
+        bn: "মদিনা মুনাওয়ারা (মসজিদে নববী)",
+        url: "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Al_Haram_Al_Madani_-_Al_Madinah_1_(أذان_الحرم_المدني_-_المدينة_المنورة).mp3"
+      },
+      alafasy: {
+        id: "alafasy",
+        name: "Mishary Rashid Alafasy",
+        bn: "মিশারী রাশিদ আল-আফাসী",
+        url: "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Mishary_Rashid_Alafasy_1_-_Kuwait_(مشاري_راشد_العفاسي_-_الكويت).mp3"
+      },
+      aqsa: {
+        id: "aqsa",
+        name: "Al-Aqsa Mosque Jerusalem",
+        bn: "বায়তুল মুকাদ্দাস (আল-আকসা)",
+        url: "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Al_Aqsa_-_Jerusalem_(أذان_المسجد_الأقصى_-_القدس).mp3"
+      },
+      chime: {
+        id: "chime",
+        name: "Gentle Islamic Chime",
+        bn: "শান্তিদায়ক ইসলামিক চাইম",
+        url: "chime"
+      }
+    };
+
+    function getSelectedAzanVoice() {
+      const savedKey = SafeStorage.getItem("noor_azan_voice") || "btv";
+      return AZAN_VOICES[savedKey] || AZAN_VOICES.btv;
+    }
+
+    function changeAzanVoice(voiceKey) {
+      if (!AZAN_VOICES[voiceKey]) voiceKey = "btv";
+      SafeStorage.setItem("noor_azan_voice", voiceKey);
+      const v = AZAN_VOICES[voiceKey];
+      const name = currentLang === "bn" ? v.bn : v.name;
+      showToast(currentLang === "bn" ? `আযান ভয়েস সেট হয়েছে: ${name}` : `Azan voice set: ${name}`);
+      triggerVibration(25);
+    }
+
+    function testSelectedAzanVoice() {
+      const v = getSelectedAzanVoice();
+      const prayerName = currentLang === "bn" ? "টেস্ট আযান" : "Test Azan";
+      playRealAzanAudio(prayerName, "Now");
+      const vName = currentLang === "bn" ? v.bn : v.name;
+      showToast(currentLang === "bn" ? `আযান বাজছে (${vName}) • থামাতে 'আযান থামান' চাপুন` : `Playing Azan (${vName}) • Tap Stop Azan to silence`);
+    }
+
+    function playChimeSequence() {
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playChime(freq, "sine", 0.6), idx * 400);
+      });
+    }
+
     function playRealAzanAudio(prayerName, prayerTimeStr) {
       isAzanCurrentlyPlaying = true;
       triggerVibration(600);
 
-      // 1. Play in-app HTML5 Audio tag (azan.mp3)
+      const voice = getSelectedAzanVoice();
+
+      // 1. Play in-app HTML5 Audio tag
       const audio = document.getElementById("azan-audio-player");
       if (audio) {
-        audio.currentTime = 0;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(err => {
-            console.log("Audio autoplay note:", err);
-          });
+        if (voice.url === "chime") {
+          audio.pause();
+          playChimeSequence();
+        } else {
+          if (!audio.src.endsWith(voice.url)) {
+            audio.src = voice.url;
+          }
+          audio.currentTime = 0;
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => {
+              console.log("Audio autoplay note:", err);
+              if (voice.url !== "azan.mp3") {
+                audio.src = "azan.mp3";
+                audio.play().catch(e => console.log("Local fallback failed:", e));
+              }
+            });
+          }
         }
+
         audio.onended = () => {
           stopActiveAzan(true);
+          // Automatically display and highlight the BTV Azan Dua & Bengali meaning after Azan
+          const duaBody = document.getElementById("azan-dua-body");
+          if (duaBody) {
+            duaBody.style.display = "block";
+            const arrow = document.getElementById("azan-dua-arrow");
+            if (arrow) arrow.textContent = "▲";
+          }
+          showToast(currentLang === "bn" ? "আযান সমাপ্ত • আযানের দোয়া পড়ুন 🤲" : "Azan completed • Recite Dua after Azan 🤲");
         };
       }
 
-      // 2. Play Android native MediaPlayer with R.raw.azan & ongoing notification
+      // 2. Play Android native MediaPlayer with ongoing notification & Stop button
       if (window.AndroidApp && typeof window.AndroidApp.playAzanNow === "function") {
         window.AndroidApp.playAzanNow(prayerName, prayerTimeStr);
       }
 
-      // 3. Show active Azan Floating UI Bar with Stop button
+      // 3. Show active Azan Floating UI Bar with Stop button (z-index 10001, on top of all modals)
       const bar = document.getElementById("azan-active-bar");
       if (bar) {
+        const voiceLabel = currentLang === "bn" ? voice.bn : voice.name;
         document.getElementById("azan-active-title").textContent = currentLang === "bn" ? "🕌 " + prayerName + " আযান বাজছে" : "🕌 " + prayerName + " Azan Playing";
-        document.getElementById("azan-active-sub").textContent = currentLang === "bn" ? "আল্লাহু আকবার, আল্লাহু আকবার..." : "Allahu Akbar, Allahu Akbar...";
+        document.getElementById("azan-active-sub").textContent = voiceLabel;
         bar.classList.add("active");
       }
     }
@@ -3641,8 +3766,66 @@
       }
       if (!silent) {
         triggerVibration(25);
-        showToast(currentLang === "bn" ? "আযান থামানো হয়েছে" : "Azan silenced");
+        showToast(currentLang === "bn" ? "আযান থামানো হয়েছে ⏹" : "Azan silenced ⏹");
       }
+    }
+
+    function testAzanNotification() {
+      testSelectedAzanVoice();
+    }
+
+    /* Email Feedback & Dua Helpers */
+    function sendFeedbackEmail() {
+      const email = "grafigrowofficial@gmail.com";
+      const subject = encodeURIComponent("Namaz Reminder App Suggestions & Feedback");
+      const body = encodeURIComponent("আসসালামু আলাইকুম মোস্তাফিজ ভাই,\n\nনামাজ রিমাইন্ডার অ্যাপ সম্পর্কে আমার পরামর্শ ও মতামত:\n\n");
+      const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
+      window.location.href = mailtoUrl;
+      triggerVibration(25);
+    }
+
+    function copyFeedbackEmail() {
+      const email = "grafigrowofficial@gmail.com";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(() => {
+          showToast(currentLang === "bn" ? "📋 ইমেইল কপি করা হয়েছে: " + email : "📋 Email copied: " + email);
+          triggerVibration(25);
+        }).catch(() => fallbackCopyEmail(email));
+      } else {
+        fallbackCopyEmail(email);
+      }
+    }
+
+    function fallbackCopyEmail(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast(currentLang === "bn" ? "📋 কপি করা হয়েছে: " + text : "📋 Copied: " + text);
+      triggerVibration(25);
+    }
+
+    function playDuaBengaliAudio() {
+      if (!('speechSynthesis' in window)) {
+        showToast(currentLang === "bn" ? "অডিও স্পিচ সমর্থিত নয়, নিচের অর্থ পড়ুন" : "Speech synthesis not supported on this browser");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const meaningText = "হে আল্লাহ! এই পরিপূর্ণ আহ্বান এবং প্রতিষ্ঠিত নামাজের তুমিই একমাত্র রব। আমাদের প্রিয় নবী মুহাম্মদ সাল্লাল্লাহু আলাইহি ওয়াসাল্লামকে ওসীলা ও সর্বোচ্চ মর্যাদাপূর্ণ স্থান দান করুন এবং তাঁকে সেই প্রশংসিত স্থানে পৌঁছান, যার প্রতিশ্রুতি আপনি তাঁকে দিয়েছেন।";
+      const utterance = new SpeechSynthesisUtterance(meaningText);
+      utterance.lang = "bn-BD";
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+      showToast(currentLang === "bn" ? "🔊 দোয়ার বাংলা অর্থ পাঠ করা হচ্ছে..." : "🔊 Playing Bengali Dua translation...");
+      triggerVibration(20);
+    }
+
+    function copyAzanDuaText() {
+      const duaFull = `আযানের পরের দোয়া:\nاللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ\n\nবাংলা অর্থ:\n"হে আল্লাহ! এই পরিপূর্ণ আহ্বান এবং প্রতিষ্ঠিত নামাজের তুমিই একমাত্র রব। আমাদের প্রিয় নবী মুহাম্মদ (সা.)-কে ওসীলা ও সর্বোচ্চ মর্যাদাপূর্ণ স্থান দান করুন এবং তাঁকে সেই প্রশংসিত স্থানে পৌঁছান, যার প্রতিশ্রুতি আপনি তাঁকে দিয়েছেন।"\n(সহিহ বুখারি ৬১৪)\n— নামাজ রিমাইন্ডার`;
+      fallbackCopyEmail(duaFull);
     }
 
     /* Melodic Azan Chime Synthesizer with Single Reusable AudioContext (Zero-Leak) */
@@ -3841,6 +4024,7 @@
       document.getElementById("qibla-bearing-text").textContent = `${STRINGS[currentLang].qibla}: ${qiblaAngle}°`;
 
       if (document.getElementById("select-city")) document.getElementById("select-city").value = userConfig.cityKey;
+      if (document.getElementById("select-azan-voice")) document.getElementById("select-azan-voice").value = SafeStorage.getItem("noor_azan_voice") || "btv";
       if (document.getElementById("select-madhhab")) document.getElementById("select-madhhab").value = userConfig.isHanafi;
       if (document.getElementById("select-method")) document.getElementById("select-method").value = userConfig.method;
 
@@ -4701,7 +4885,7 @@
 
     /* Version Update Banner Helper */
     function checkUpdateNotice() {
-      const isDismissed = SafeStorage.getItem("noor_update_v120_dismissed") === "true";
+      const isDismissed = SafeStorage.getItem("noor_update_v130_dismissed") === "true";
       const banner = document.getElementById("update-notice-banner");
       if (banner && !isDismissed) {
         banner.style.display = "flex";
@@ -4711,7 +4895,7 @@
     function dismissUpdateNotice() {
       const banner = document.getElementById("update-notice-banner");
       if (banner) banner.style.display = "none";
-      SafeStorage.setItem("noor_update_v120_dismissed", "true");
+      SafeStorage.setItem("noor_update_v130_dismissed", "true");
       triggerVibration(15);
     }
 
@@ -4877,7 +5061,7 @@
         <!-- Steps for Apple iPhone -->
                 <!-- Direct 1-Click APK Download for Android -->
         <div style="margin-bottom: 20px; text-align: center;">
-          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.2.0/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.3.0/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
             <span>🤖</span> <span>Download Android App (.APK)</span>
           </a>
           <span style="display: block; font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">১ ক্লিকে সরাসরি ডাউনলোড (কোনো সাইন-আপ লাগবে না)</span>
