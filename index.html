@@ -2004,12 +2004,12 @@
         <div class="update-notice-content">
           <span style="font-size: 20px;">✨</span>
           <div class="update-notice-text">
-            <strong>নতুন সংস্করণ v1.3.0 উপলব্ধ!</strong>
-            <span>বিটিভি আযান ভয়েস, ইন-অ্যাপ ও নোটিফিকেশন স্টপ বাটন এবং ইমেইল পরামর্শ।</span>
+            <strong>নতুন সংস্করণ v1.3.1 উপলব্ধ!</strong>
+            <span>অরিজিনাল বিটিভি আযান, দোয়া ও বাংলা অর্থ অডিও সহ সম্পূর্ণ আপডেট।</span>
           </div>
         </div>
         <div class="update-notice-actions">
-          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.3.0/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.3.1/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
           <button class="update-dismiss-btn" onclick="dismissUpdateNotice()">✕</button>
         </div>
       </div>
@@ -2051,11 +2051,11 @@
           <div class="azan-dua-virtue">
             <strong>ফজিলত:</strong> যে ব্যক্তি আযান শুনে এই দোয়া পাঠ করবে, কিয়ামতের দিন তার জন্য রাসুলুল্লাহ ﷺ-এর শাফায়াত ওয়াজিব হয়ে যাবে। (সহিহ বুখারি ৬১৪)
           </div>
-          <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="btn-secondary" style="padding: 7px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.35); cursor: pointer;" onclick="playDuaBengaliAudio()">
-              <span>🔊</span> <span>বাংলা অর্থ শুনুন (Listen Meaning)</span>
+          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-primary" style="padding: 8px 14px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);" onclick="playDuaBengaliAudio()">
+              <span>🔊</span> <span>বিটিভি দোয়া ও বাংলা অর্থ শুনুন (BTV Audio)</span>
             </button>
-            <button class="btn-secondary" style="padding: 7px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;" onclick="copyAzanDuaText()">
+            <button class="btn-secondary" style="padding: 8px 14px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;" onclick="copyAzanDuaText()">
               <span>📋</span> <span>দোয়া ও অর্থ কপি করুন (Copy)</span>
             </button>
           </div>
@@ -2461,7 +2461,7 @@
             <div class="setting-desc" id="lbl-azan-voice-desc">বিটিভি বা পছন্দের মুয়াজ্জিনের মধুর আযান বেছে নিন</div>
           </div>
           <select id="select-azan-voice" onchange="changeAzanVoice(this.value)">
-            <option value="btv">🇧🇩 বাংলাদেশ টেলিভিশন (BTV) - কারী ওবায়দুল্লাহ (ডিফল্ট)</option>
+            <option value="btv">🇧🇩 বাংলাদেশ টেলিভিশন (BTV) - আযান, দোয়া ও বাংলা অর্থ (ডিফল্ট)</option>
             <option value="makkah">🕋 মক্কা মুকাররমা (Makkah - শায়খ আলী আহমদ মোল্লা)</option>
             <option value="madinah">🕌 মদিনা মুনাওয়ারা (Madinah - মসজিদে নববী)</option>
             <option value="alafasy">🎙️ মিশারী রাশিদ আল-আফাসী (Mishary Alafasy)</option>
@@ -3628,9 +3628,10 @@
     const AZAN_VOICES = {
       btv: {
         id: "btv",
-        name: "BTV Bangladesh (Qari Obaidullah)",
-        bn: "বাংলাদেশ টেলিভিশন (BTV) - কারী ওবায়দুল্লাহ",
-        url: "azan.mp3"
+        name: "BTV Bangladesh (Qari Obaidullah - With Dua & Meaning)",
+        bn: "বাংলাদেশ টেলিভিশন (BTV) - আযান, দোয়া ও বাংলা অর্থ (ডিফল্ট)",
+        url: "azan.mp3",
+        duaStartTime: 236
       },
       makkah: {
         id: "makkah",
@@ -3808,19 +3809,30 @@
     }
 
     function playDuaBengaliAudio() {
-      if (!('speechSynthesis' in window)) {
-        showToast(currentLang === "bn" ? "অডিও স্পিচ সমর্থিত নয়, নিচের অর্থ পড়ুন" : "Speech synthesis not supported on this browser");
-        return;
+      const audio = document.getElementById("azan-audio-player");
+      if (!audio) return;
+      audio.pause();
+      if (!audio.src.endsWith("azan.mp3")) {
+        audio.src = "azan.mp3";
       }
-      window.speechSynthesis.cancel();
-      const meaningText = "হে আল্লাহ! এই পরিপূর্ণ আহ্বান এবং প্রতিষ্ঠিত নামাজের তুমিই একমাত্র রব। আমাদের প্রিয় নবী মুহাম্মদ সাল্লাল্লাহু আলাইহি ওয়াসাল্লামকে ওসীলা ও সর্বোচ্চ মর্যাদাপূর্ণ স্থান দান করুন এবং তাঁকে সেই প্রশংসিত স্থানে পৌঁছান, যার প্রতিশ্রুতি আপনি তাঁকে দিয়েছেন।";
-      const utterance = new SpeechSynthesisUtterance(meaningText);
-      utterance.lang = "bn-BD";
-      utterance.rate = 0.9;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-      showToast(currentLang === "bn" ? "🔊 দোয়ার বাংলা অর্থ পাঠ করা হচ্ছে..." : "🔊 Playing Bengali Dua translation...");
-      triggerVibration(20);
+      audio.currentTime = 236; // Seeks directly to authentic BTV Arabic Dua and Bengali translation!
+      const p = audio.play();
+      if (p !== undefined) {
+        p.then(() => {
+          isAzanCurrentlyPlaying = true;
+          const bar = document.getElementById("azan-active-bar");
+          if (bar) {
+            document.getElementById("azan-active-title").textContent = currentLang === "bn" ? "🤲 বিটিভি আযানের দোয়া ও অর্থ" : "🤲 BTV Azan Dua & Meaning";
+            document.getElementById("azan-active-sub").textContent = "বাংলাদেশ টেলিভিশন (BTV Original Audio)";
+            bar.classList.add("active");
+          }
+          showToast(currentLang === "bn" ? "🔊 বিটিভি আযানের দোয়া ও বাংলা অর্থ বাজছে..." : "🔊 Playing BTV Azan Dua & Bengali meaning...");
+          triggerVibration(25);
+        }).catch(err => {
+          console.log("Audio play error:", err);
+          showToast(currentLang === "bn" ? "অডিও লোড হচ্ছে, আবার চাপুন" : "Audio loading, tap again");
+        });
+      }
     }
 
     function copyAzanDuaText() {
@@ -4885,7 +4897,7 @@
 
     /* Version Update Banner Helper */
     function checkUpdateNotice() {
-      const isDismissed = SafeStorage.getItem("noor_update_v130_dismissed") === "true";
+      const isDismissed = SafeStorage.getItem("noor_update_v131_dismissed") === "true";
       const banner = document.getElementById("update-notice-banner");
       if (banner && !isDismissed) {
         banner.style.display = "flex";
@@ -4895,7 +4907,7 @@
     function dismissUpdateNotice() {
       const banner = document.getElementById("update-notice-banner");
       if (banner) banner.style.display = "none";
-      SafeStorage.setItem("noor_update_v130_dismissed", "true");
+      SafeStorage.setItem("noor_update_v131_dismissed", "true");
       triggerVibration(15);
     }
 
@@ -5061,7 +5073,7 @@
         <!-- Steps for Apple iPhone -->
                 <!-- Direct 1-Click APK Download for Android -->
         <div style="margin-bottom: 20px; text-align: center;">
-          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.3.0/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.3.1/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
             <span>🤖</span> <span>Download Android App (.APK)</span>
           </a>
           <span style="display: block; font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">১ ক্লিকে সরাসরি ডাউনলোড (কোনো সাইন-আপ লাগবে না)</span>
