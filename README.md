@@ -15,7 +15,7 @@ An all-in-one Islamic companion app for Android and Apple (iOS) users featuring:
 
 ## 📥 Direct Downloads & Links (No Sign-Up Required)
 
-* **🤖 Android APK Direct Download:** [Download NamazReminder.apk](https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.0.0/NamazReminder.apk)
+* **🤖 Android APK Direct Download (v1.3.2 Latest):** [Download NamazReminder.apk](https://github.com/mustafiz-cell/namaz-reminder/releases/latest/download/NamazReminder.apk)
 * **🌐 Web & iPhone App:** [https://mustafiz-cell.github.io/namaz-reminder/](https://mustafiz-cell.github.io/namaz-reminder/)
 
 ---
