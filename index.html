@@ -1825,6 +1825,146 @@
       line-height: 1.35;
     }
 
+  
+    /* In-App Version Update Banner */
+    .update-notice-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(30, 41, 59, 0.95));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .update-notice-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .update-notice-text strong {
+      font-size: 0.82rem;
+      color: #FFFFFF;
+      display: block;
+    }
+
+    .update-notice-text span {
+      font-size: 0.72rem;
+      color: var(--gold-light);
+    }
+
+    .update-notice-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .update-action-btn {
+      background: var(--primary);
+      color: #070D19;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .update-dismiss-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      cursor: pointer;
+    }
+
+    /* Dua After Azan Card */
+    .azan-dua-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .azan-dua-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .azan-dua-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .azan-dua-arabic {
+      font-family: "Amiri", "Scheherazade New", serif;
+      font-size: 1.18rem;
+      line-height: 1.8;
+      color: var(--gold-light);
+      text-align: right;
+      direction: rtl;
+      margin: 12px 0 8px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border-right: 3px solid var(--gold);
+    }
+
+    .azan-dua-trans {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #E2E8F0;
+      margin-bottom: 6px;
+    }
+
+    .azan-dua-meaning {
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: #94A3B8;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    .azan-dua-virtue {
+      font-size: 0.76rem;
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border-left: 3px solid var(--primary);
+    }
+
+    /* Mosque Quick Time Offset Buttons */
+    .quick-adj-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      margin-left: 4px;
+      font-weight: 700;
+    }
+    .quick-adj-btn:active {
+      transform: scale(0.92);
+      background: rgba(245, 158, 11, 0.3);
+    }
+
   </style>
 </head>
 <body>
@@ -1844,10 +1984,7 @@
     </div>
         <div class="header-actions">
       
-              <button class="header-install-btn" id="btn-header-install" onclick="showAppInstallInstructions()">
-          <span>📲</span> <span id="lbl-header-install">Install / অ্যাপ</span>
-        </button>
-      <button class="lang-toggle-btn" onclick="toggleLanguage()" id="lang-btn">বাংলা</button>
+              <button class="lang-toggle-btn" onclick="toggleLanguage()" id="lang-btn">বাংলা</button>
       <div class="location-pill" onclick="switchTab('settings')">
         <span>📍</span>
         <span id="header-city-name">Dhaka</span>
@@ -1858,6 +1995,21 @@
   <main>
     <!-- ================= TAB 1: PRAYER TIMES & AZAN ================= -->
     <section id="tab-prayer" class="tab-content active">
+      <!-- In-App Version Update Notice -->
+      <div class="update-notice-banner" id="update-notice-banner" style="display: none;">
+        <div class="update-notice-content">
+          <span style="font-size: 20px;">✨</span>
+          <div class="update-notice-text">
+            <strong>নতুন সংস্করণ v1.1.0 উপলব্ধ!</strong>
+            <span>ময়মনসিংহসহ জিপিএস লোকেশন ও আযান ভয়েস আপডেট।</span>
+          </div>
+        </div>
+        <div class="update-notice-actions">
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.0.0/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
+          <button class="update-dismiss-btn" onclick="dismissUpdateNotice()">✕</button>
+        </div>
+      </div>
+
       <!-- Hero Next Azan / Prayer Card -->
       <div class="hero-card">
         <span class="next-prayer-badge" id="lbl-next-prayer">Next Prayer</span>
@@ -1869,6 +2021,32 @@
         <div class="hero-meta">
           <span id="current-prayer-status">Current: Fajr</span>
           <span id="qibla-bearing-text">Qibla: 268° W</span>
+        </div>
+      </div>
+
+      
+      <!-- Dua After Azan & Virtues -->
+      <div class="azan-dua-card">
+        <div class="azan-dua-header" onclick="toggleAzanDuaBody()">
+          <div class="azan-dua-title">
+            <span>🤲</span>
+            <span id="lbl-azan-dua-heading">আযানের পরের দোয়া ও বাংলা অর্থ (Dua After Azan)</span>
+          </div>
+          <span id="azan-dua-arrow" style="font-size: 1.1rem; color: var(--gold);">▼</span>
+        </div>
+        <div id="azan-dua-body" style="display: none; margin-top: 10px;">
+          <div class="azan-dua-arabic">
+            اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ
+          </div>
+          <div class="azan-dua-trans">
+            <strong>উচ্চারণ:</strong> আল্লাহুম্মা রব্বা হাযিহিদ দাওয়াতিত তাম্মাহ, ওয়াস সালাতিল কায়িমাহ, আতি মুহাম্মাদানিল ওয়াসীলাতা ওয়াল ফাদীলাহ, ওয়াব'আসহু মাক্বামাম মাহমূদানিল্লাযী ওয়া'অদতাহ।
+          </div>
+          <div class="azan-dua-meaning">
+            <strong>অর্থ:</strong> "হে আল্লাহ! এই পরিপূর্ণ আহ্বান এবং প্রতিষ্ঠিত নামাজের তুমিই একমাত্র রব। আমাদের প্রিয় নবী মুহাম্মদ (সা.)-কে ওসীলা ও সর্বোচ্চ মর্যাদাপূর্ণ স্থান দান করুন এবং তাঁকে সেই প্রশংসিত স্থানে পৌঁছান, যার প্রতিশ্রুতি আপনি তাঁকে দিয়েছেন।"
+          </div>
+          <div class="azan-dua-virtue">
+            <strong>ফজিলত:</strong> যে ব্যক্তি আযান শুনে এই দোয়া পাঠ করবে, কিয়ামতের দিন তার জন্য রাসুলুল্লাহ ﷺ-এর শাফায়াত ওয়াজিব হয়ে যাবে। (সহিহ বুখারি ৬১৪)
+          </div>
         </div>
       </div>
 
@@ -2105,7 +2283,7 @@
         </div>
 
         <!-- Dynamic Circular SVG Counter Button (Ultra-responsive on Touch & Click) -->
-        <div class="counter-ring-container" id="tasbih-touch-area" role="button" tabindex="0" onclick="handleTasbihClick(event)" onpointerdown="handleTasbihPointer(event)">
+        <div class="counter-ring-container" id="tasbih-touch-area" role="button" tabindex="0" onpointerdown="handleTasbihTouch(event)">
           <svg class="counter-svg" viewBox="0 0 220 220">
             <defs>
               <linearGradient id="goldEmeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -2180,17 +2358,24 @@
             <div class="setting-label" id="lbl-preset-city">Preset City</div>
             <div class="setting-desc" id="lbl-preset-city-desc">Auto-configures latitude &amp; longitude</div>
           </div>
-          <select id="select-city" onchange="onCityChange(this.value)">
+                    <select id="select-city" onchange="onCityChange(this.value)">
             <option value="dhaka">Dhaka (ঢাকা)</option>
+            <option value="mymensingh">Mymensingh (ময়মনসিংহ)</option>
             <option value="chittagong">Chittagong (চট্টগ্রাম)</option>
             <option value="sylhet">Sylhet (সিলেট)</option>
             <option value="rajshahi">Rajshahi (রাজশাহী)</option>
             <option value="khulna">Khulna (খুলনা)</option>
+            <option value="barisal">Barisal (বরিশাল)</option>
+            <option value="rangpur">Rangpur (রংপুর)</option>
+            <option value="comilla">Comilla (কুমিল্লা)</option>
+            <option value="bogra">Bogra (বগুড়া)</option>
+            <option value="gazipur">Gazipur (গাজীপুর)</option>
+            <option value="narayanganj">Narayanganj (নারায়ণগঞ্জ)</option>
+            <option value="coxsbazar">Cox's Bazar (কক্সবাজার)</option>
             <option value="london">London (লন্ডন)</option>
             <option value="newyork">New York (নিউ ইয়র্ক)</option>
             <option value="riyadh">Riyadh (রিয়াদ)</option>
             <option value="dubai">Dubai (দুবাই)</option>
-            <option value="kualalumpur">Kuala Lumpur (কুয়ালালামপুর)</option>
           </select>
         </div>
         <div class="setting-row">
@@ -2231,6 +2416,23 @@
       </div>
 
       <!-- Background Reminders Test -->
+      
+      <!-- Contact Developer for Suggestions -->
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-contact-title">পরামর্শ ও যোগাযোগ / Contact Developer</div>
+        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; text-align: center;">
+          <p style="font-size: 0.84rem; color: #E2E8F0; margin-bottom: 12px; line-height: 1.45;" id="lbl-contact-desc">
+            আপনার যেকোনো মতামত, নতুন ফিচারের পরামর্শ বা ত্রুটি জানাতে সরাসরি আমাকে ইমেইল করতে পারেন:
+          </p>
+          <a href="mailto:grafigrowofficial@gmail.com?subject=Namaz%20Reminder%20App%20Feedback%20&%20Suggestions" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; text-decoration: none; border-radius: 20px; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
+            <span>✉️</span> <span>grafigrowofficial@gmail.com</span>
+          </a>
+          <span style="display: block; font-size: 0.72rem; color: var(--gold-light); margin-top: 8px;">
+            মোস্তাফিজ (Mustafiz) • আন্তরিকভাবে আপনার সুপরামর্শের অপেক্ষায় 🤲
+          </span>
+        </div>
+      </div>
+
       <div class="setting-group">
         <div class="setting-group-title" id="lbl-bg-title">Background Reminders &amp; Azan</div>
         <div class="setting-row">
@@ -3066,17 +3268,24 @@
     }
 
     /* ================= ASTRONOMICAL CALCULATION ================= */
-    const CITIES = {
+        const CITIES = {
       dhaka: { name: "Dhaka", bn: "ঢাকা", lat: 23.8103, lng: 90.4125, tz: 6 },
+      mymensingh: { name: "Mymensingh", bn: "ময়মনসিংহ", lat: 24.7471, lng: 90.4203, tz: 6 },
       chittagong: { name: "Chittagong", bn: "চট্টগ্রাম", lat: 22.3569, lng: 91.7832, tz: 6 },
       sylhet: { name: "Sylhet", bn: "সিলেট", lat: 24.8949, lng: 91.8687, tz: 6 },
-      rajshahi: { name: "Rajshahi", bn: "রাজশাহী", lat: 24.3745, lng: 88.6042, tz: 6 },
+      rajshahi: { name: "Rajshahi", bn: "রাজশাহী", lat: 24.3636, lng: 88.6241, tz: 6 },
       khulna: { name: "Khulna", bn: "খুলনা", lat: 22.8456, lng: 89.5403, tz: 6 },
+      barisal: { name: "Barisal", bn: "বরিশাল", lat: 22.7010, lng: 90.3535, tz: 6 },
+      rangpur: { name: "Rangpur", bn: "রংপুর", lat: 25.7439, lng: 89.2752, tz: 6 },
+      comilla: { name: "Comilla", bn: "কুমিল্লা", lat: 23.4682, lng: 91.1788, tz: 6 },
+      bogra: { name: "Bogra", bn: "বগুড়া", lat: 24.8465, lng: 89.3777, tz: 6 },
+      gazipur: { name: "Gazipur", bn: "গাজীপুর", lat: 23.9999, lng: 90.4203, tz: 6 },
+      narayanganj: { name: "Narayanganj", bn: "নারায়ণগঞ্জ", lat: 23.6238, lng: 90.5000, tz: 6 },
+      coxsbazar: { name: "Cox's Bazar", bn: "কক্সবাজার", lat: 21.4272, lng: 92.0058, tz: 6 },
       london: { name: "London", bn: "লন্ডন", lat: 51.5074, lng: -0.1278, tz: 0 },
       newyork: { name: "New York", bn: "নিউ ইয়র্ক", lat: 40.7128, lng: -74.0060, tz: -5 },
       riyadh: { name: "Riyadh", bn: "রিয়াদ", lat: 24.7136, lng: 46.6753, tz: 3 },
-      dubai: { name: "Dubai", bn: "দুবাই", lat: 25.2048, lng: 55.2708, tz: 4 },
-      kualalumpur: { name: "Kuala Lumpur", bn: "কুয়ালালামপুর", lat: 3.1390, lng: 101.6869, tz: 8 }
+      dubai: { name: "Dubai", bn: "দুবাই", lat: 25.2048, lng: 55.2708, tz: 4 }
     };
 
     let userConfig = {
@@ -4034,18 +4243,15 @@
       triggerVibration(15);
     }
 
-    /* Fast & Robust Tasbih Button Touch & Pointer Handlers */
+        /* Single Unified 190ms Zero-Double-Click Touch Handler */
     let lastTasbihTapTime = 0;
-    function handleTasbihPointer(e) {
+    function handleTasbihTouch(e) {
+      if (e) {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+      }
       const now = Date.now();
-      if (now - lastTasbihTapTime < 75) return;
-      lastTasbihTapTime = now;
-      incrementTasbih();
-    }
-
-    function handleTasbihClick(e) {
-      const now = Date.now();
-      if (now - lastTasbihTapTime < 110) return;
+      if (now - lastTasbihTapTime < 190) return;
       lastTasbihTapTime = now;
       incrementTasbih();
     }
@@ -4273,36 +4479,122 @@
       showToast(currentLang === "bn" ? "হিসাব পদ্ধতি হালনাগাদ করা হয়েছে" : "Calculation updated");
     }
 
-    function detectGPSLocation() {
+        /* ================= ROBUST GPS & BANGLADESH DISTRICTS RESOLVER ================= */
+    function getNearestBangladeshCity(lat, lng) {
+      let closestKey = "dhaka";
+      let minDistance = Infinity;
+      for (const [key, c] of Object.entries(CITIES)) {
+        const dLat = (c.lat - lat) * 111.0;
+        const dLng = (c.lng - lng) * 111.0 * Math.cos(lat * Math.PI / 180.0);
+        const dist = Math.sqrt(dLat * dLat + dLng * dLng);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestKey = key;
+        }
+      }
+      return {
+        key: closestKey,
+        city: CITIES[closestKey],
+        distanceKm: Math.round(minDistance)
+      };
+    }
+
+    function applyCoordinates(lat, lng, sourceName = "") {
+      userConfig.lat = parseFloat(lat);
+      userConfig.lng = parseFloat(lng);
+      userConfig.cityKey = "gps";
+
+      const nearest = getNearestBangladeshCity(lat, lng);
+      let detectedName = nearest.city ? (currentLang === "bn" ? nearest.city.bn : nearest.city.name) : "Custom GPS";
+      if (sourceName) detectedName = sourceName;
+
+      userConfig.cityName = `${detectedName} (GPS)`;
+      document.getElementById("header-city-name").textContent = detectedName;
+
+      SafeStorage.setItem("noor_city", "gps");
+      SafeStorage.setItem("noor_lat", userConfig.lat.toString());
+      SafeStorage.setItem("noor_lng", userConfig.lng.toString());
+      SafeStorage.setItem("noor_city_name", userConfig.cityName);
+
+      initApp();
+      triggerVibration(60);
+      showToast(currentLang === "bn" ? `📍 অবস্থান সনাক্ত হয়েছে: ${detectedName}` : `📍 Location detected: ${detectedName}`);
+      playChime(659.25, "sine", 0.25);
+    }
+
+    window.onNativeLocationReceived = function(lat, lng) {
+      applyCoordinates(lat, lng);
+    };
+
+    window.onNativeLocationFailed = function(msg) {
+      fallbackWebGeolocation();
+    };
+
+    function fallbackWebGeolocation() {
       if (!navigator.geolocation) {
-        showToast("Geolocation not supported");
+        showToast(currentLang === "bn" ? "জিপিএস সমর্থিত নয়" : "Geolocation not supported");
         return;
       }
-      showToast(currentLang === "bn" ? "জিপিএস লোকেশন নেওয়া হচ্ছে..." : "Acquiring GPS location...");
       navigator.geolocation.getCurrentPosition(
         pos => {
-          userConfig.lat = pos.coords.latitude;
-          userConfig.lng = pos.coords.longitude;
-          userConfig.cityKey = "gps";
-          userConfig.cityName = "Current GPS Location";
-
-          SafeStorage.setItem("noor_city", "gps");
-          SafeStorage.setItem("noor_lat", userConfig.lat);
-          SafeStorage.setItem("noor_lng", userConfig.lng);
-          SafeStorage.setItem("noor_city_name", userConfig.cityName);
-
-          initApp();
-          showToast(currentLang === "bn" ? "জিপিএস দিয়ে লোকেশন আপডেট সম্পন্ন! 📍" : "Location updated from GPS! 📍");
-          playChime(659.25, "sine", 0.3);
+          applyCoordinates(pos.coords.latitude, pos.coords.longitude);
         },
         err => {
-          showToast("GPS error: " + (err.message || "Permission denied"));
+          showToast(currentLang === "bn" ? "জিপিএস পারমিশন দিন বা তালিকা থেকে শহর বেছে নিন" : "Please enable GPS permission or select city from settings");
         },
-        { enableHighAccuracy: true, timeout: 10000 }
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
       );
     }
 
-    window.addEventListener("DOMContentLoaded", initApp);
+    function detectGPSLocation() {
+      showToast(currentLang === "bn" ? "জিপিএস লোকেশন নেওয়া হচ্ছে..." : "Acquiring GPS location...");
+      if (window.AndroidApp && typeof window.AndroidApp.requestDeviceLocation === "function") {
+        window.AndroidApp.requestDeviceLocation();
+      } else {
+        fallbackWebGeolocation();
+      }
+    }
+
+    /* Azan Dua Toggle & Mosque Timing Helpers */
+    function toggleAzanDuaBody() {
+      const body = document.getElementById("azan-dua-body");
+      const arrow = document.getElementById("azan-dua-arrow");
+      if (!body) return;
+      const isHidden = body.style.display === "none";
+      body.style.display = isHidden ? "block" : "none";
+      if (arrow) arrow.textContent = isHidden ? "▲" : "▼";
+      triggerVibration(20);
+    }
+
+    function adjustMosqueTimeMinutes(prayerKey, deltaMinutes) {
+      const curr = mosqueSchedule[prayerKey] || "12:00";
+      const parts = curr.split(":");
+      let totalM = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10) + deltaMinutes;
+      if (totalM < 0) totalM += 1440;
+      if (totalM >= 1440) totalM -= 1440;
+      const newH = Math.floor(totalM / 60);
+      const newM = totalM % 60;
+      const newTimeStr = `${newH.toString().padStart(2, '0')}:${newM.toString().padStart(2, '0')}`;
+      setCustomAzanTime(prayerKey, newTimeStr);
+    }
+
+    /* Version Update Banner Helper */
+    function checkUpdateNotice() {
+      const isDismissed = SafeStorage.getItem("noor_update_v110_dismissed") === "true";
+      const banner = document.getElementById("update-notice-banner");
+      if (banner && !isDismissed) {
+        banner.style.display = "flex";
+      }
+    }
+
+    function dismissUpdateNotice() {
+      const banner = document.getElementById("update-notice-banner");
+      if (banner) banner.style.display = "none";
+      SafeStorage.setItem("noor_update_v110_dismissed", "true");
+      triggerVibration(15);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => { initApp(); checkUpdateNotice(); });
   
     /* Service Worker & iOS Safari PWA Detection */
     if ('serviceWorker' in navigator) {
