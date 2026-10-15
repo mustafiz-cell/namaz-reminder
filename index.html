@@ -1028,8 +1028,12 @@
   
     /* ================= SAKINAH PREMIUM UI STYLES ================= */
 
-    
-      100% { transform: scaleY(1.3); }
+    /* Allow text selection for stories, duas, and quotes */
+    .story-sheet-body, .story-lesson-box, .story-sheet-title,
+    .quote-body, .quote-author, .creator-dua-quote,
+    .azan-dua-card, .azan-dua-arabic, .azan-dua-trans, .azan-dua-meaning, .azan-dua-virtue {
+      user-select: text !important;
+      -webkit-user-select: text !important;
     }
 
     /* Professional Creator Credit Card */
@@ -1968,7 +1972,7 @@
   </style>
 </head>
 <body>
-  <audio id="azan-audio-player" src="azan.mp3" preload="auto"></audio>
+  <audio id="azan-audio-player" src="azan.mp3" preload="none"></audio>
 
   <!-- Spiritual Bismillah Header -->
   <div class="bismillah-strip">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
@@ -2000,12 +2004,12 @@
         <div class="update-notice-content">
           <span style="font-size: 20px;">✨</span>
           <div class="update-notice-text">
-            <strong>নতুন সংস্করণ v1.1.0 উপলব্ধ!</strong>
-            <span>ময়মনসিংহসহ জিপিএস লোকেশন ও আযান ভয়েস আপডেট।</span>
+            <strong>নতুন সংস্করণ v1.2.0 উপলব্ধ!</strong>
+            <span>টাইমজোন ও আযান ফিক্স, অডিও নোটিফিকেশন ও উন্নত রিমাইন্ডার।</span>
           </div>
         </div>
         <div class="update-notice-actions">
-          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.1.0/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.2.0/NamazReminder.apk" class="update-action-btn" target="_blank">ডাউনলোড</a>
           <button class="update-dismiss-btn" onclick="dismissUpdateNotice()">✕</button>
         </div>
       </div>
@@ -3288,11 +3292,15 @@
       dubai: { name: "Dubai", bn: "দুবাই", lat: 25.2048, lng: 55.2708, tz: 4 }
     };
 
+    const savedLat = parseFloat(SafeStorage.get("noor_lat", "23.8103"));
+    const savedLng = parseFloat(SafeStorage.get("noor_lng", "90.4125"));
+    const savedTz  = parseFloat(SafeStorage.get("noor_tz", "6"));
+
     let userConfig = {
       cityKey: SafeStorage.get("noor_city", "dhaka") || "dhaka",
-      lat: parseFloat(SafeStorage.get("noor_lat", "23.8103")) || 23.8103,
-      lng: parseFloat(SafeStorage.get("noor_lng", "90.4125")) || 90.4125,
-      tz: parseFloat(SafeStorage.get("noor_tz", "6")) || 6,
+      lat: Number.isFinite(savedLat) ? savedLat : 23.8103,
+      lng: Number.isFinite(savedLng) ? savedLng : 90.4125,
+      tz: Number.isFinite(savedTz) ? savedTz : 6,
       cityName: SafeStorage.get("noor_city_name", "Dhaka") || "Dhaka",
       isHanafi: SafeStorage.get("noor_hanafi", "1") !== null ? parseInt(SafeStorage.get("noor_hanafi", "1")) : 1,
       method: SafeStorage.get("noor_method", "karachi") || "karachi"
@@ -3368,24 +3376,42 @@
       let totalMinutes = Math.round(decHours * 60);
       let h = Math.floor(totalMinutes / 60) % 24;
       let m = totalMinutes % 60;
-      let period = h >= 12 ? (currentLang === "bn" ? "দুপুর/বিকাল" : "PM") : (currentLang === "bn" ? "ভোর/সকাল" : "AM");
       let displayH = h % 12;
       if (displayH === 0) displayH = 12;
       let displayM = m < 10 ? "0" + m : m;
 
       if (currentLang === "bn") {
+        let period = "";
+        if (h >= 4 && h < 6) period = "ভোর";
+        else if (h >= 6 && h < 12) period = "সকাল";
+        else if (h >= 12 && h < 15.5) period = "দুপুর";
+        else if (h >= 15.5 && h < 18) period = "বিকাল";
+        else if (h >= 18 && h < 19.5) period = "সন্ধ্যা";
+        else period = "রাত";
+
         const toBnDigits = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
         return `${toBnDigits(displayH)}:${toBnDigits(displayM)} ${period}`;
+      } else {
+        let period = h >= 12 ? "PM" : "AM";
+        return `${displayH}:${displayM} ${period}`;
       }
-      return `${displayH}:${displayM} ${period}`;
     }
 
     function getPrayerDate(today, decHours) {
       let totalMinutes = Math.round(decHours * 60);
-      let h = Math.floor(totalMinutes / 60) % 24;
-      let m = totalMinutes % 60;
+      let daysToAdd = Math.floor(totalMinutes / (24 * 60));
+      let remainingMinutes = totalMinutes % (24 * 60);
+      if (remainingMinutes < 0) {
+        remainingMinutes += 24 * 60;
+        daysToAdd -= 1;
+      }
+      let h = Math.floor(remainingMinutes / 60);
+      let m = remainingMinutes % 60;
       let d = new Date(today);
       d.setHours(h, m, 0, 0);
+      if (daysToAdd !== 0) {
+        d.setDate(d.getDate() + daysToAdd);
+      }
       return d;
     }
 
@@ -3542,8 +3568,9 @@
       SafeStorage.setItem("noor_mosque_enabled", mosqueSchedule.enabled ? "true" : "false");
       updatePrayerSchedule();
       scheduleNativeBackgroundAlarms();
+      const dhuhrDisplay = formatTime(parseTimeToDec(mosqueSchedule.dhuhr));
       showToast(mosqueSchedule.enabled ? 
-        (currentLang === "bn" ? "মসজিদের আযানের সময় মোড সক্রিয় (যোহর ১:০০)" : "Mosque Azan Schedule active (Dhuhr 1:00 PM)") : 
+        (currentLang === "bn" ? `মসজিদের আযানের সময় মোড সক্রিয় (যোহর ${dhuhrDisplay})` : `Mosque Azan Schedule active (Dhuhr ${dhuhrDisplay})`) : 
         (currentLang === "bn" ? "সৌর ওয়াক্ত শুরু মোড সক্রিয়" : "Astronomical Waqt mode active")
       );
     }
@@ -3569,8 +3596,6 @@
       isAzanCurrentlyPlaying = true;
       triggerVibration(600);
 
-      // Automatically pause ambient vibe when Azan starts!
-      
       // 1. Play in-app HTML5 Audio tag (azan.mp3)
       const audio = document.getElementById("azan-audio-player");
       if (audio) {
@@ -3618,8 +3643,6 @@
         triggerVibration(25);
         showToast(currentLang === "bn" ? "আযান থামানো হয়েছে" : "Azan silenced");
       }
-      if (ambientUserEnabled) {
-              }
     }
 
     /* Melodic Azan Chime Synthesizer with Single Reusable AudioContext (Zero-Leak) */
@@ -3737,9 +3760,13 @@
       if (document.getElementById("select-lang")) document.getElementById("select-lang").value = currentLang;
 
       // Update City label
-      const city = CITIES[userConfig.cityKey];
-      if (city) {
-        setText("header-city-name", currentLang === "bn" ? city.bn : city.name);
+      if (userConfig.cityKey === "gps") {
+        setText("header-city-name", userConfig.cityName || (currentLang === "bn" ? "📍 বর্তমান অবস্থান" : "📍 Current Location"));
+      } else {
+        const city = CITIES[userConfig.cityKey];
+        if (city) {
+          setText("header-city-name", currentLang === "bn" ? city.bn : city.name);
+        }
       }
 
       updatePrayerSchedule();
@@ -3808,8 +3835,7 @@
       }
 
       const now = new Date();
-      const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-      document.getElementById("hijri-gregorian-date").textContent = now.toLocaleDateString(currentLang === "bn" ? 'bn-BD' : 'en-US', options);
+      updateDateDisplay(now);
 
       const qiblaAngle = calculateQibla(userConfig.lat, userConfig.lng);
       document.getElementById("qibla-bearing-text").textContent = `${STRINGS[currentLang].qibla}: ${qiblaAngle}°`;
@@ -3826,14 +3852,23 @@
       updateProgressRing(tasbihCount, tasbihTarget);
     }
 
+    function updateDateDisplay(date = new Date()) {
+      const el = document.getElementById("hijri-gregorian-date");
+      if (el) {
+        const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        el.textContent = date.toLocaleDateString(currentLang === "bn" ? 'bn-BD' : 'en-US', options);
+      }
+    }
+
     function updatePrayerSchedule() {
       const now = new Date();
       const s = STRINGS[currentLang];
+      const deviceTz = -now.getTimezoneOffset() / 60.0;
       const astro = calculatePrayerTimes(
         now,
         userConfig.lat,
         userConfig.lng,
-        userConfig.tz,
+        Number.isFinite(deviceTz) ? deviceTz : userConfig.tz,
         userConfig.isHanafi,
         userConfig.method
       );
@@ -3841,10 +3876,10 @@
       // Determine Azan times based on Mosque Azan Schedule
       let azanFajr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.fajr) : astro.fajr;
       let azanSunrise = astro.sunrise;
-      let azanDhuhr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.dhuhr) : astro.dhuhr; // Default 1:00 PM!
-      let azanAsr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.asr) : astro.asr;       // Default 4:15 PM!
-      let azanMaghrib = astro.maghrib;                                                             // Sunset!
-      let azanIsha = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.isha) : astro.isha;   // Default 7:45 PM!
+      let azanDhuhr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.dhuhr) : astro.dhuhr;
+      let azanAsr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.asr) : astro.asr;
+      let azanMaghrib = astro.maghrib;
+      let azanIsha = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.isha) : astro.isha;
 
       prayerTimesCache = {
         fajr: azanFajr,
@@ -3861,6 +3896,14 @@
       };
 
       const waqtPrefix = currentLang === "bn" ? "ওয়াক্ত: " : "Waqt: ";
+
+      // Dynamic badges with early warning if mosque time falls before astronomical waqt
+      const dhuhrBadge = mosqueSchedule.enabled ? 
+        (currentLang === "bn" ? `মসজিদের আযান ${formatTime(azanDhuhr)}` : `Mosque Azan ${formatTime(azanDhuhr)}`) + (azanDhuhr < astro.dhuhr ? " ⚠️" : "") : "";
+      const asrBadge = mosqueSchedule.enabled ? 
+        (currentLang === "bn" ? `মসজিদের আযান ${formatTime(azanAsr)}` : `Mosque Azan ${formatTime(azanAsr)}`) + (azanAsr < astro.asr ? " ⚠️" : "") : "";
+      const ishaBadge = mosqueSchedule.enabled ? 
+        (currentLang === "bn" ? `মসজিদের আযান ${formatTime(azanIsha)}` : `Mosque Azan ${formatTime(azanIsha)}`) + (azanIsha < astro.isha ? " ⚠️" : "") : "";
 
       const prayers = [
         {
@@ -3887,7 +3930,7 @@
           arabic: "الظهر",
           time: azanDhuhr,
           icon: "🌞",
-          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "মসজিদের আযান ১:০০" : "Mosque Azan 1:00 PM") : "",
+          badge: dhuhrBadge,
           waqtInfo: waqtPrefix + formatTime(astro.dhuhr) + " - " + formatTime(astro.asr)
         },
         {
@@ -3896,7 +3939,7 @@
           arabic: "العصر",
           time: azanAsr,
           icon: "🌤️",
-          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "আযান" : "Azan") : "",
+          badge: asrBadge,
           waqtInfo: waqtPrefix + formatTime(astro.asr) + " - " + formatTime(astro.maghrib)
         },
         {
@@ -3914,7 +3957,7 @@
           arabic: "العشاء",
           time: azanIsha,
           icon: "🌙",
-          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "আযান" : "Azan") : "",
+          badge: ishaBadge,
           waqtInfo: waqtPrefix + formatTime(astro.isha) + " - " + formatTime(astro.fajr)
         }
       ];
@@ -3923,6 +3966,11 @@
       container.innerHTML = "";
 
       prayers.forEach(p => {
+        const isSunrise = p.key === "sunrise";
+        const reminderOn = isPrayerReminderOn(p.key);
+        const bellButton = isSunrise ? `<div style="width: 34px;"></div>` :
+          `<button class="bell-btn ${reminderOn ? 'active' : ''}" onclick="togglePrayerReminder('${p.key}', this)" title="${reminderOn ? 'Reminder ON' : 'Reminder OFF'}">${reminderOn ? '🔔' : '🔕'}</button>`;
+
         const row = document.createElement("div");
         row.className = "prayer-row";
         row.id = `row-${p.key}`;
@@ -3939,7 +3987,7 @@
               <div class="prayer-time">${formatTime(p.time)}</div>
               <div class="prayer-waqt-sub">${p.waqtInfo}</div>
             </div>
-            <button class="bell-btn active" onclick="togglePrayerReminder('${p.key}', this)" title="Reminder">🔔</button>
+            ${bellButton}
           </div>
         `;
         container.appendChild(row);
@@ -3959,11 +4007,57 @@
       updateCountdownClock();
     }
 
+    let lastTickTime = Date.now();
+    let currentDayKey = new Date().toDateString();
+
     function updateCountdownClock() {
       if (!prayerTimesCache) return;
       const now = new Date();
-      const s = STRINGS[currentLang];
 
+      // 1. Midnight day rollover detection & auto-refresh
+      const todayStr = now.toDateString();
+      if (todayStr !== currentDayKey) {
+        currentDayKey = todayStr;
+        updateDateDisplay(now);
+        updatePrayerSchedule();
+        loadTracker();
+        updateNamazStreakUI();
+        scheduleNativeBackgroundAlarms();
+      }
+
+      // 2. Safe Azan triggers check between ticks (prevTick to now, up to 120s late)
+      const prevTick = lastTickTime;
+      const nowMs = now.getTime();
+      lastTickTime = nowMs;
+
+      const s = STRINGS[currentLang];
+      const checkPrayers = [
+        { key: "fajr", name: s.fajr, dec: prayerTimesCache.fajr },
+        { key: "dhuhr", name: s.dhuhr, dec: prayerTimesCache.dhuhr },
+        { key: "asr", name: s.asr, dec: prayerTimesCache.asr },
+        { key: "maghrib", name: s.maghrib, dec: prayerTimesCache.maghrib },
+        { key: "isha", name: s.isha, dec: prayerTimesCache.isha }
+      ];
+
+      const todayFiredKey = `noor_fired_${now.getFullYear()}_${now.getMonth()+1}_${now.getDate()}`;
+      let firedMap = {};
+      try {
+        firedMap = JSON.parse(SafeStorage.getItem(todayFiredKey) || "{}");
+      } catch(e) {}
+
+      for (const p of checkPrayers) {
+        if (!isPrayerReminderOn(p.key)) continue;
+        if (firedMap[p.key]) continue;
+        const pTime = getPrayerDate(now, p.dec).getTime();
+        if (pTime > prevTick - 1000 && pTime <= nowMs && (nowMs - pTime) <= 120000) {
+          firedMap[p.key] = true;
+          SafeStorage.setItem(todayFiredKey, JSON.stringify(firedMap));
+          playRealAzanAudio(p.name, formatTime(p.dec));
+          break;
+        }
+      }
+
+      // 3. Next Prayer Countdown Display
       const prayerOrder = [
         { name: s.fajr, arabic: "الفجر", dec: prayerTimesCache.fajr, key: "fajr" },
         { name: s.sunrise, arabic: "الشروق", dec: prayerTimesCache.sunrise, key: "sunrise" },
@@ -4005,14 +4099,6 @@
       document.getElementById("current-prayer-status").textContent = `${currentLang === 'bn' ? 'বর্তমান' : 'Current'}: ${currentPrayerName}`;
 
       let diffMs = nextDate - now;
-      if (diffMs <= 1000 && diffMs >= 0) {
-        const prayerTriggerKey = nextPrayer.key + "_" + now.getDate() + "_" + now.getHours() + "_" + now.getMinutes();
-        if (lastNotifiedPrayer !== prayerTriggerKey) {
-          lastNotifiedPrayer = prayerTriggerKey;
-          playRealAzanAudio(nextPrayer.name, formatTime(nextPrayer.dec));
-        }
-      }
-
       if (diffMs < 0) diffMs = 0;
       let hours = Math.floor(diffMs / (1000 * 60 * 60));
       let mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -4026,7 +4112,6 @@
       document.getElementById("next-prayer-countdown").textContent = timeStr;
     }
 
-    /* Native AlarmManager Background Sync */
     function scheduleNativeBackgroundAlarms() {
       if (!window.AndroidApp || typeof window.AndroidApp.schedulePrayerAlarm !== "function" || !prayerTimesCache) return;
       const now = new Date();
@@ -4039,6 +4124,7 @@
       ];
 
       list.forEach(p => {
+        if (!isPrayerReminderOn(p.name.toLowerCase())) return;
         let pDate = getPrayerDate(now, p.dec);
         if (pDate.getTime() > now.getTime()) {
           window.AndroidApp.schedulePrayerAlarm(p.name, pDate.getTime(), formatTime(p.dec));
@@ -4319,11 +4405,46 @@
       updateNamazStreakUI();
     }
 
+    function getPrayerReminders() {
+      try {
+        const raw = SafeStorage.getItem("noor_reminders");
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return { fajr: true, dhuhr: true, asr: true, maghrib: true, isha: true };
+    }
+
+    function isPrayerReminderOn(key) {
+      if (key === "sunrise") return false;
+      const reminders = getPrayerReminders();
+      return reminders[key] !== false;
+    }
+
     function togglePrayerReminder(prayerKey, btn) {
-      btn.classList.toggle("active");
-      const isActive = btn.classList.contains("active");
-      showToast(isActive ? `Reminder ON for ${prayerKey}` : `Reminder OFF for ${prayerKey}`);
-      triggerVibration(20);
+      if (prayerKey === "sunrise") return;
+      const reminders = getPrayerReminders();
+      const current = reminders[prayerKey] !== false;
+      const nextState = !current;
+      reminders[prayerKey] = nextState;
+      SafeStorage.setItem("noor_reminders", JSON.stringify(reminders));
+
+      if (btn) {
+        if (nextState) {
+          btn.classList.add("active");
+          btn.textContent = "🔔";
+          btn.title = "Reminder ON";
+        } else {
+          btn.classList.remove("active");
+          btn.textContent = "🔕";
+          btn.title = "Reminder OFF";
+        }
+      }
+      const pName = STRINGS[currentLang]?.[prayerKey] || prayerKey;
+      const msg = nextState ?
+        (currentLang === "bn" ? `${pName} এর আযান রিমাইন্ডার চালু` : `Reminder ON for ${pName}`) :
+        (currentLang === "bn" ? `${pName} এর আযান রিমাইন্ডার বন্ধ` : `Reminder OFF for ${pName}`);
+      showToast(msg);
+      triggerVibration(25);
+      scheduleNativeBackgroundAlarms();
     }
 
 
@@ -4580,7 +4701,7 @@
 
     /* Version Update Banner Helper */
     function checkUpdateNotice() {
-      const isDismissed = SafeStorage.getItem("noor_update_v110_dismissed") === "true";
+      const isDismissed = SafeStorage.getItem("noor_update_v120_dismissed") === "true";
       const banner = document.getElementById("update-notice-banner");
       if (banner && !isDismissed) {
         banner.style.display = "flex";
@@ -4590,9 +4711,19 @@
     function dismissUpdateNotice() {
       const banner = document.getElementById("update-notice-banner");
       if (banner) banner.style.display = "none";
-      SafeStorage.setItem("noor_update_v110_dismissed", "true");
+      SafeStorage.setItem("noor_update_v120_dismissed", "true");
       triggerVibration(15);
     }
+
+    // Auto wake-up triggers on tab focus and screen unlock
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        updateCountdownClock();
+      }
+    });
+    window.addEventListener("focus", () => {
+      updateCountdownClock();
+    });
 
     window.addEventListener("DOMContentLoaded", () => { initApp(); checkUpdateNotice(); });
   
@@ -4746,7 +4877,7 @@
         <!-- Steps for Apple iPhone -->
                 <!-- Direct 1-Click APK Download for Android -->
         <div style="margin-bottom: 20px; text-align: center;">
-          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.1.0/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.2.0/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
             <span>🤖</span> <span>Download Android App (.APK)</span>
           </a>
           <span style="display: block; font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">১ ক্লিকে সরাসরি ডাউনলোড (কোনো সাইন-আপ লাগবে না)</span>

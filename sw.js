@@ -1,9 +1,8 @@
-const CACHE_NAME = 'namaz-reminder-v1';
+const CACHE_NAME = 'namaz-reminder-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './azan.mp3',
   './icon-192.png',
   './icon-512.png'
 ];
@@ -27,22 +26,47 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+  const url = new URL(e.request.url);
+
+  // 1. Bypass Cache API for audio and Range requests (fixes iOS Safari & media streaming)
+  if (e.request.headers.has('range') || e.request.destination === 'audio' || url.pathname.endsWith('.mp3')) {
+    return;
+  }
+
+  // 2. Network-First for HTML navigation / document requests
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
+    e.respondWith(
+      fetch(e.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(e.request, responseClone);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match('./index.html') || caches.match('./');
+        })
+    );
+    return;
+  }
+
+  // 3. Cache-First for static assets
   e.respondWith(
     caches.match(e.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
       return fetch(e.request).then((networkResponse) => {
-        return caches.open(CACHE_NAME).then((cache) => {
-          if (e.request.url.startsWith('http') && e.request.method === 'GET') {
-            cache.put(e.request, networkResponse.clone());
-          }
-          return networkResponse;
-        });
-      }).catch(() => {
-        if (e.request.destination === 'document') {
-          return caches.match('./index.html');
+        if (e.request.url.startsWith('http') && e.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseClone);
+          });
         }
+        return networkResponse;
       });
     })
   );
