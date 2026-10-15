@@ -1,0 +1,4500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <!-- Apple iOS Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Namaz Reminder">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070D19">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Namaz Reminder - Prayer Times, Azan & Stories</title>
+  <style>
+    :root {
+      --bg: #070D19;
+      --card-bg: rgba(18, 26, 44, 0.88);
+      --card-border: rgba(245, 158, 11, 0.15);
+      --primary: #10B981;
+      --primary-glow: rgba(16, 185, 129, 0.28);
+      --gold: #F59E0B;
+      --gold-light: #FDE68A;
+      --gold-glow: rgba(245, 158, 11, 0.25);
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --active-card: linear-gradient(135deg, rgba(6, 78, 59, 0.5), rgba(15, 23, 42, 0.8));
+      --active-border: #10B981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Professional Subtle Islamic Geometric Watermark Background */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hind Siliguri", "Noto Sans Bengali", Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2310b981' fill-opacity='0.038'%3E%3Cpath d='M40 0l11.7 11.7L40 23.4 28.3 11.7zM0 40l11.7-11.7L23.4 40 11.7 51.7zM40 80l-11.7-11.7L40 56.6l11.7 11.7zM80 40l-11.7 11.7L56.6 40l11.7-11.7zM20 20l8.3 8.3L20 36.6l-8.3-8.3zM60 20l8.3 8.3L60 36.6l-8.3-8.3zM20 60l8.3 8.3L20 76.6l-8.3-8.3zM60 60l8.3 8.3L60 76.6l-8.3-8.3z'/%3E%3Ccircle cx='40' cy='40' r='10' fill='none' stroke='%23f59e0b' stroke-width='0.7' stroke-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 74px;
+    }
+
+    /* Spiritual Bismillah Header Banner */
+    .bismillah-strip {
+      text-align: center;
+      padding: 6px 0 3px;
+      background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.08), transparent);
+      font-size: 0.95rem;
+      color: var(--gold-light);
+      font-family: "Traditional Arabic", "Amiri", serif;
+      letter-spacing: 1px;
+    }
+
+    /* Header Bar */
+    header {
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(7, 13, 25, 0.94);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .app-branding {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #065F46, #D97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .app-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .app-title p {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lang-toggle-btn {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 5px 10px;
+      border-radius: 16px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .location-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 5px 11px;
+      border-radius: 16px;
+      font-size: 0.78rem;
+      color: #F8FAFC;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+
+    /* Container */
+    main {
+      flex: 1;
+      padding: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero Next Azan / Prayer Card */
+    .hero-card {
+      background: linear-gradient(135deg, #064E3B 0%, #0F172A 80%, #1E1B4B 100%);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 20px;
+      padding: 22px 20px 18px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.55);
+    }
+
+    .hero-card::after {
+      content: "🕌";
+      position: absolute;
+      right: -8px;
+      bottom: -15px;
+      font-size: 95px;
+      opacity: 0.09;
+      pointer-events: none;
+    }
+
+    .next-prayer-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--gold-light);
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .next-prayer-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .next-prayer-title .arabic {
+      font-size: 1.35rem;
+      color: var(--gold-light);
+      font-weight: 400;
+    }
+
+    .countdown-timer {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 12px;
+      text-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 10px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Daily Prayer Checkin Tracker */
+    .tracker-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .tracker-title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .tracker-pills {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .prayer-check-pill {
+      flex: 1;
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .prayer-check-pill.completed {
+      background: rgba(16, 185, 129, 0.22);
+      border-color: #10B981;
+      color: #34D399;
+    }
+
+    .prayer-check-name {
+      font-size: 0.74rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .prayer-check-icon {
+      font-size: 1rem;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 18px 0 12px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .section-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Prayer Schedule List */
+    .prayer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .prayer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .prayer-row.current-prayer {
+      background: var(--active-card);
+      border-color: var(--active-border);
+      box-shadow: 0 4px 18px var(--primary-glow);
+    }
+
+    .prayer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .prayer-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+    }
+
+    .prayer-row.current-prayer .prayer-icon-wrap {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    .prayer-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .prayer-arabic {
+      font-size: 0.75rem;
+      color: var(--gold-light);
+    }
+
+    .prayer-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .prayer-time {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bell-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .bell-btn.active {
+      color: var(--gold);
+    }
+
+    /* ================= MOTIVATION TAB ================= */
+    .quote-hero-card {
+      background: linear-gradient(135deg, rgba(22, 30, 49, 0.95), rgba(10, 15, 29, 0.98));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 20px;
+      padding: 24px 20px 20px;
+      margin-bottom: 20px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    }
+
+    .quote-category-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--gold);
+      background: rgba(245, 158, 11, 0.15);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .quote-body {
+      font-size: 1.15rem;
+      line-height: 1.58;
+      font-weight: 500;
+      color: #F1F5F9;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .quote-author {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .quote-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 14px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10B981, #059669);
+      border: none;
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.96);
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+
+    .filter-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip.active {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10B981;
+      color: #34D399;
+      font-weight: 600;
+    }
+
+    .quote-card-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .quote-card-item .text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .quote-card-item .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+    }
+
+    /* ================= TASBIH TAB & GUIDE ================= */
+    .tasbih-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0 20px;
+    }
+
+    .dhikr-selector {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .dhikr-arabic {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .dhikr-meaning {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .counter-circle-btn {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #064E3B 0%, #062820 60%, #021712 100%);
+      border: 4px solid #10B981;
+      box-shadow: 0 0 35px var(--primary-glow), inset 0 0 20px rgba(16, 185, 129, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      margin: 10px 0 22px;
+      transition: transform 0.1s ease;
+    }
+
+    .counter-circle-btn:active {
+      transform: scale(0.94);
+      border-color: var(--gold);
+      box-shadow: 0 0 45px var(--gold-glow);
+    }
+
+    .counter-number {
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .counter-target {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .tasbih-controls {
+      display: flex;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .preset-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .preset-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .preset-pill.active {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--gold);
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* Tasbih Virtues & Guide Card */
+    .tazbih-guide-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .tazbih-guide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .tazbih-guide-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .guide-item {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+    }
+
+    .guide-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide-arabic {
+      font-size: 1.15rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .guide-trans {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #34D399;
+      margin-bottom: 3px;
+    }
+
+    .guide-meaning {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .guide-virtue {
+      font-size: 0.76rem;
+      color: #FCD34D;
+      background: rgba(245, 158, 11, 0.1);
+      padding: 4px 8px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    /* Settings Tab */
+    .setting-group {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .setting-group-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .setting-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    select {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #FFFFFF;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    /* First-time Language Selection Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #0E1726;
+      border: 2px solid var(--gold);
+      border-radius: 24px;
+      padding: 28px 24px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.45;
+    }
+
+    .lang-choice-btn {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-choice-btn:active {
+      transform: scale(0.97);
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10B981;
+    }
+
+    /* Bottom Navigation Bar */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(7, 13, 25, 0.96);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: color 0.15s;
+      flex: 1;
+      padding: 6px 0;
+    }
+
+    .nav-item.active {
+      color: #10B981;
+    }
+
+    /* Mustafiz Sincere Dua Footer */
+    .dua-footer {
+      margin: 24px 0 12px;
+      text-align: center;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.06));
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .dua-footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      line-height: 1.4;
+    }
+
+    .dua-icon {
+      font-size: 1.15rem;
+    }
+  
+    /* Prayer Timing Box & Mosque Schedule Styles */
+    .prayer-timing-box {
+      text-align: right;
+    }
+
+    .prayer-waqt-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .timing-mode-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 9px 13px;
+      margin-bottom: 14px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .timing-mode-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #34D399;
+      font-weight: 600;
+    }
+
+    .timing-adjust-btn {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .azan-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--gold-light);
+      margin-left: 4px;
+      font-weight: 700;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    /* Active Azan Playing Floating Bar */
+    .azan-active-bar {
+      display: none;
+      position: fixed;
+      bottom: 72px;
+      left: 12px;
+      right: 12px;
+      max-width: 476px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+      z-index: 999;
+      animation: slideUpAzan 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .azan-active-bar.active {
+      display: flex;
+    }
+
+    .azan-active-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sound-waves {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 22px;
+    }
+
+    .sound-waves span {
+      width: 4px;
+      background: var(--gold);
+      border-radius: 2px;
+      animation: soundWaveAnim 0.9s ease-in-out infinite alternate;
+    }
+
+    .sound-waves span:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+    .sound-waves span:nth-child(2) { height: 18px; animation-delay: 0.35s; }
+    .sound-waves span:nth-child(3) { height: 12px; animation-delay: 0.15s; }
+    .sound-waves span:nth-child(4) { height: 22px; animation-delay: 0.45s; }
+    .sound-waves span:nth-child(5) { height: 10px; animation-delay: 0.25s; }
+
+    @keyframes soundWaveAnim {
+      0% { transform: scaleY(0.3); }
+      100% { transform: scaleY(1.3); }
+    }
+
+    @keyframes slideUpAzan {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .azan-active-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .azan-active-sub {
+      font-size: 0.7rem;
+      color: var(--gold-light);
+    }
+
+    .stop-azan-btn {
+      background: #EF4444;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
+    }
+
+    .stop-azan-btn:active {
+      transform: scale(0.95);
+    }
+
+  
+    /* ================= SAKINAH PREMIUM UI STYLES ================= */
+
+    
+      100% { transform: scaleY(1.3); }
+    }
+
+    /* Professional Creator Credit Card */
+    .creator-credit-card {
+      margin: 22px 0 12px;
+      background: linear-gradient(135deg, rgba(18, 26, 44, 0.95), rgba(7, 13, 25, 0.98));
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      border-radius: 16px;
+      padding: 13px 16px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .creator-credit-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .creator-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .creator-sparkle {
+      font-size: 15px;
+      color: var(--gold);
+    }
+
+    .creator-title-text {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .creator-name-highlight {
+      color: var(--gold-light);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .creator-dua-quote {
+      font-size: 0.76rem;
+      color: #94A3B8;
+      line-height: 1.45;
+      font-style: normal;
+    }
+
+    /* Single Reflection Card Controls */
+    .reflection-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 12px;
+    }
+
+    .nav-arrow-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #F8FAFC;
+      padding: 7px 13px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+
+    .nav-arrow-btn:active {
+      transform: scale(0.96);
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10B981;
+    }
+
+    /* Famous Islamic Stories Section */
+    .stories-section {
+      margin-top: 24px;
+    }
+
+    .stories-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .stories-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .stories-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .story-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: transform 0.15s, border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .story-card:active {
+      transform: scale(0.985);
+      border-color: var(--gold);
+    }
+
+    .story-top-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .story-icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+    }
+
+    .story-meta {
+      flex: 1;
+    }
+
+    .story-cat-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--gold);
+      background: rgba(245, 158, 11, 0.12);
+      padding: 2px 7px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 3px;
+    }
+
+    .story-headline {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.35;
+    }
+
+    .story-preview {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    .story-lesson-chip {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid #10B981;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      color: #A7F3D0;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+
+    .story-read-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--gold-light);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Story Full Reader Modal */
+    .story-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .story-modal-overlay.active {
+      display: flex;
+      animation: modalFadeIn 0.25s ease-out;
+    }
+
+    .story-sheet {
+      background: #0B1120;
+      border: 1px solid var(--card-border);
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-width: 520px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .story-sheet-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      background: #0B1120;
+      z-index: 10;
+    }
+
+    .story-sheet-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      max-width: 80%;
+      line-height: 1.3;
+    }
+
+    .story-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .story-sheet-body {
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #E2E8F0;
+    }
+
+    .story-sheet-body p {
+      margin-bottom: 14px;
+    }
+
+    .story-lesson-box {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 16px 0;
+      font-size: 0.85rem;
+      color: var(--gold-light);
+    }
+
+    /* Tasbih Streak & Analytics System */
+    .streak-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .streak-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .streak-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .streak-flame-icon {
+      font-size: 26px;
+      animation: flamePulse 1.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes flamePulse {
+      0% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.4)); }
+      100% { transform: scale(1.15); filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7)); }
+    }
+
+    .streak-headline {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .streak-rank-tag {
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .streak-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 10px;
+      text-align: center;
+    }
+
+    .streak-grid-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 4px;
+      border-radius: 10px;
+    }
+
+    .streak-stat-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #34D399;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .streak-stat-lbl {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Circular SVG Bead Counter Ring */
+    .counter-ring-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 14px auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .counter-svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .counter-circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 10;
+    }
+
+    .counter-circle-progress {
+      fill: none;
+      stroke: url(#goldEmeraldGrad);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.15s ease-out;
+    }
+
+    .counter-touch-body {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #065F46, #064E3B 65%, #0F172A 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      transition: transform 0.08s;
+      user-select: none;
+    }
+
+    .counter-touch-body:active {
+      transform: scale(0.94);
+    }
+
+    .counter-big-num {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .counter-target-text {
+      font-size: 0.74rem;
+      color: var(--gold-light);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+  
+    /* Namaz Streak & Milestone Card */
+    .namaz-streak-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .namaz-streak-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .namaz-streak-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .namaz-flame {
+      font-size: 28px;
+      animation: flamePulse 1.8s ease-in-out infinite alternate;
+    }
+
+    .namaz-streak-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.2px;
+    }
+
+    .namaz-streak-sub {
+      font-size: 0.76rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .namaz-milestone-btn {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--gold-light);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .namaz-milestone-btn:active {
+      transform: scale(0.95);
+      background: rgba(245, 158, 11, 0.3);
+    }
+
+    .milestone-progress-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .milestone-progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .milestone-progress-track {
+      height: 7px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .milestone-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10B981, #F59E0B);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .namaz-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .namaz-stat-item {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .namaz-stat-num {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #34D399;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .namaz-stat-lbl {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    .namaz-completed-banner {
+      margin-top: 12px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(6, 78, 59, 0.4));
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: bannerGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes bannerGlow {
+      0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+      100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.45); }
+    }
+
+    .namaz-completed-icon {
+      font-size: 24px;
+    }
+
+    .namaz-completed-text strong {
+      font-size: 0.88rem;
+      color: #FFFFFF;
+      display: block;
+    }
+
+    .namaz-completed-text p {
+      font-size: 0.74rem;
+      color: var(--gold-light);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    /* Milestone List Modal */
+    .milestone-item-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .milestone-item-row.unlocked {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .milestone-item-icon {
+      font-size: 26px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .milestone-item-info {
+      flex: 1;
+    }
+
+    .milestone-item-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .milestone-item-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .milestone-status-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
+    .milestone-item-row.unlocked .milestone-status-badge {
+      background: rgba(16, 185, 129, 0.25);
+      color: #34D399;
+    }
+
+    /* Counter SVG & Touch Body overrides */
+    .counter-ring-container {
+      touch-action: manipulation !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .counter-svg {
+      pointer-events: none !important;
+    }
+
+    .counter-touch-body {
+      pointer-events: none !important;
+      width: 185px !important;
+      height: 185px !important;
+      transition: transform 0.08s ease, box-shadow 0.08s ease !important;
+    }
+
+    .counter-ring-container:active .counter-touch-body,
+    .counter-touch-body.active-pulse {
+      transform: scale(0.92) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.1) !important;
+    }
+
+  
+    /* iOS Install Helper Banner */
+    .ios-install-banner {
+      display: none;
+      position: fixed;
+      bottom: 74px;
+      left: 14px;
+      right: 14px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.99));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 16px;
+      padding: 12px 14px;
+      z-index: 9998;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      animation: slideUpBanner 0.4s ease-out;
+    }
+
+    @keyframes slideUpBanner {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .ios-install-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ios-app-icon-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      flex-shrink: 0;
+    }
+
+    .ios-install-text {
+      flex: 1;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      color: #E2E8F0;
+    }
+
+    .ios-install-text strong {
+      color: #FFFFFF;
+      font-size: 0.84rem;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .ios-install-close {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #FFF;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+  
+    /* iOS Notch & Safe Area Inset Support */
+    body {
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: calc(74px + max(0px, env(safe-area-inset-bottom)));
+    }
+
+    nav.bottom-nav {
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+      height: calc(64px + max(0px, env(safe-area-inset-bottom)));
+    }
+
+    /* Header Install Pill */
+    .header-install-btn {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(245, 158, 11, 0.25));
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      color: #FFFFFF;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s;
+    }
+
+    .header-install-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* iOS Install Guide Step Modal */
+    .ios-step-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ios-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #070D19;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .ios-step-desc {
+      font-size: 0.82rem;
+      color: #E2E8F0;
+      line-height: 1.35;
+    }
+
+  </style>
+</head>
+<body>
+  <audio id="azan-audio-player" src="azan.mp3" preload="auto"></audio>
+
+  <!-- Spiritual Bismillah Header -->
+  <div class="bismillah-strip">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+
+  <!-- Top App Header -->
+  <header>
+    <div class="app-branding">
+      <div class="app-logo">🕌</div>
+      <div class="app-title">
+        <h1 id="app-heading">Namaz Reminder</h1>
+        <p id="hijri-gregorian-date">Dhaka, Bangladesh</p>
+      </div>
+    </div>
+        <div class="header-actions">
+      
+              <button class="header-install-btn" id="btn-header-install" onclick="showAppInstallInstructions()">
+          <span>📲</span> <span id="lbl-header-install">Install / অ্যাপ</span>
+        </button>
+      <button class="lang-toggle-btn" onclick="toggleLanguage()" id="lang-btn">বাংলা</button>
+      <div class="location-pill" onclick="switchTab('settings')">
+        <span>📍</span>
+        <span id="header-city-name">Dhaka</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= TAB 1: PRAYER TIMES & AZAN ================= -->
+    <section id="tab-prayer" class="tab-content active">
+      <!-- Hero Next Azan / Prayer Card -->
+      <div class="hero-card">
+        <span class="next-prayer-badge" id="lbl-next-prayer">Next Prayer</span>
+        <div class="next-prayer-title">
+          <span id="next-prayer-name">Dhuhr</span>
+          <span class="arabic" id="next-prayer-arabic">الظهر</span>
+        </div>
+        <div class="countdown-timer" id="next-prayer-countdown">--:--:--</div>
+        <div class="hero-meta">
+          <span id="current-prayer-status">Current: Fajr</span>
+          <span id="qibla-bearing-text">Qibla: 268° W</span>
+        </div>
+      </div>
+
+      <!-- Daily Tracker Checkin -->
+      
+      <!-- Namaz Streak & Milestone System -->
+      <div class="namaz-streak-card">
+        <div class="namaz-streak-top">
+          <div class="namaz-streak-left">
+            <span class="namaz-flame">🔥</span>
+            <div>
+              <div class="namaz-streak-title" id="namaz-streak-title">০ দিনের নামাজ ধারাবাহিকতা</div>
+              <div class="namaz-streak-sub" id="namaz-streak-sub">বর্তমান মাইলস্টোন: তাকওয়ার সূচনা 🌱</div>
+            </div>
+          </div>
+          <button class="namaz-milestone-btn" onclick="openMilestonesModal()" id="btn-view-milestones">
+            <span>🏅</span> <span id="lbl-milestones-btn">মাইলস্টোন</span>
+          </button>
+        </div>
+
+        <div class="milestone-progress-box">
+          <div class="milestone-progress-header">
+            <span id="milestone-next-label">পরবর্তী লক্ষ্য: ১ দিন (তাকওয়ার সূচনা)</span>
+            <span id="milestone-next-percent">০%</span>
+          </div>
+          <div class="milestone-progress-track">
+            <div class="milestone-progress-bar" id="namaz-milestone-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="namaz-stats-grid">
+          <div class="namaz-stat-item">
+            <div class="namaz-stat-num" id="namaz-stat-current">০ দিন</div>
+            <div class="namaz-stat-lbl" id="lbl-namaz-stat-current">বর্তমান স্ট্রিক</div>
+          </div>
+          <div class="namaz-stat-item">
+            <div class="namaz-stat-num" id="namaz-stat-best">০ দিন</div>
+            <div class="namaz-stat-lbl" id="lbl-namaz-stat-best">সেরা রেকর্ড</div>
+          </div>
+          <div class="namaz-stat-item">
+            <div class="namaz-stat-num" id="namaz-stat-total">০ ওয়াক্ত</div>
+            <div class="namaz-stat-lbl" id="lbl-namaz-stat-total">মোট নামাজ</div>
+          </div>
+        </div>
+
+        <div class="namaz-completed-banner" id="namaz-completed-banner" style="display: none;">
+          <div class="namaz-completed-icon">🎉</div>
+          <div class="namaz-completed-text">
+            <strong id="lbl-namaz-completed-title">মাশাআল্লাহ! আজকের ৫ ওয়াক্ত নামাজ সম্পন্ন!</strong>
+            <p id="lbl-namaz-completed-dua">"নামাজ মুমিনের নূর এবং কিয়ামতের দিনের নাজাতের উসিলা।"</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracker-card">
+        <div class="tracker-title">
+          <span id="lbl-tracker-title">Daily Prayer Check-In</span>
+          <span id="tracker-score" style="color: var(--primary);">0/5 Completed</span>
+        </div>
+        <div class="tracker-pills">
+          <div class="prayer-check-pill" onclick="togglePrayerCheck('fajr')">
+            <span class="prayer-check-name" id="pill-fajr">Fajr</span>
+            <span class="prayer-check-icon" id="chk-fajr">⚪</span>
+          </div>
+          <div class="prayer-check-pill" onclick="togglePrayerCheck('dhuhr')">
+            <span class="prayer-check-name" id="pill-dhuhr">Dhuhr</span>
+            <span class="prayer-check-icon" id="chk-dhuhr">⚪</span>
+          </div>
+          <div class="prayer-check-pill" onclick="togglePrayerCheck('asr')">
+            <span class="prayer-check-name" id="pill-asr">Asr</span>
+            <span class="prayer-check-icon" id="chk-asr">⚪</span>
+          </div>
+          <div class="prayer-check-pill" onclick="togglePrayerCheck('maghrib')">
+            <span class="prayer-check-name" id="pill-maghrib">Maghrib</span>
+            <span class="prayer-check-icon" id="chk-maghrib">⚪</span>
+          </div>
+          <div class="prayer-check-pill" onclick="togglePrayerCheck('isha')">
+            <span class="prayer-check-name" id="pill-isha">Isha</span>
+            <span class="prayer-check-icon" id="chk-isha">⚪</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prayer Schedule List -->
+      <div class="section-header">
+        <div>
+          <div class="section-title" id="lbl-schedule-title">Today's Azan &amp; Prayer Times</div>
+          <div class="section-subtitle" id="lbl-schedule-subtitle">Accurate solar timing for your location</div>
+        </div>
+        <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem;" onclick="testAzanNotification()">
+          🔔 <span id="lbl-test-azan">Test Azan</span>
+        </button>
+      </div>
+
+            <!-- Mosque Azan Schedule Banner -->
+      <div class="timing-mode-pill" onclick="openTimingModal()">
+        <div class="timing-mode-left">
+          <span>🕌</span>
+          <span id="lbl-timing-mode-pill">Mosque Azan Schedule (Dhuhr: 1:00 PM)</span>
+        </div>
+        <button class="timing-adjust-btn" id="btn-adjust-timing">⚙️ Adjust / সমন্বয়</button>
+      </div>
+      <div class="prayer-list" id="prayer-rows-container">
+        <!-- Rows dynamically rendered here -->
+      </div>
+
+      <!-- Sincere Dua for Mustafiz -->
+            <!-- Professional Creator & Sincere Dua Credit -->
+      <div class="creator-credit-card">
+        <div class="creator-header">
+          <span class="creator-sparkle">✨</span>
+          <div class="creator-title-text">
+            <span class="lbl-creator-pre">আন্তরিকতার সাথে প্রস্তুতকারী:</span>
+            <strong class="creator-name-highlight">মোস্তাফিজ (Mustafiz)</strong>
+          </div>
+        </div>
+        <p class="creator-dua-quote lbl-creator-dua">"যে ব্যক্তি কল্যাণের পথ দেখায়, সে আমলকারীর সমপরিমাণ সওয়াব লাভ করে।" (সহিহ মুসলিম) • আপনার দোয়ায় স্মরণ রাখার বিনীত অনুরোধ 🤲</p>
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: MOTIVATION & HADITH ================= -->
+        <!-- ================= TAB 2: MOTIVATION & STORIES ================= -->
+    <section id="tab-motivation" class="tab-content">
+      <!-- Interactive Single Reflection Card -->
+      <div class="quote-hero-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span class="quote-category-tag" id="spotlight-category">Faith &amp; Peace</span>
+          <span style="font-size: 0.72rem; color: var(--gold-light); font-weight: 600;" id="quote-counter-badge">1 / 10</span>
+        </div>
+        <div class="quote-body" id="spotlight-text">Verily, in the remembrance of Allah do hearts find rest.</div>
+        <div class="quote-author" id="spotlight-author">— Surah Ar-Ra'd (13:28)</div>
+        
+        <div class="reflection-nav">
+          <button class="nav-arrow-btn" onclick="prevQuote()">
+            <span>‹</span> <span id="lbl-prev-quote">Previous</span>
+          </button>
+          <div class="btn-group">
+            <button class="btn-icon" title="Copy" onclick="copyCurrentQuote()">📋</button>
+            <button class="btn-icon" title="Bookmark" onclick="toggleFavoriteCurrentQuote()" id="btn-favorite">⭐</button>
+            <button class="btn-icon" title="Share" onclick="shareCurrentQuote()">↗️</button>
+          </div>
+          <button class="nav-arrow-btn" onclick="nextQuote()">
+            <span id="lbl-next-quote-btn">Next</span> <span>›</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Categories Filter Chips -->
+      <div class="filter-chips">
+        <div class="chip active" onclick="filterQuotes('all', this)" id="chip-all">All</div>
+        <div class="chip" onclick="filterQuotes('peace', this)" id="chip-peace">Peace &amp; Faith</div>
+        <div class="chip" onclick="filterQuotes('hope', this)" id="chip-hope">Hope &amp; Sabr</div>
+        <div class="chip" onclick="filterQuotes('discipline', this)" id="chip-discipline">Good Deeds</div>
+        <div class="chip" onclick="filterQuotes('favorites', this)" id="chip-fav">⭐ Favorites</div>
+      </div>
+
+      <!-- Famous Islamic & Prophetic Stories -->
+      <div class="stories-section">
+        <div class="stories-section-header">
+          <div>
+            <div class="stories-title">
+              <span>📖</span> <span id="lbl-stories-title">Stories of Prophets &amp; Islam</span>
+            </div>
+            <div class="stories-subtitle" id="lbl-stories-sub">Inspiring historical events &amp; eternal moral lessons</div>
+          </div>
+        </div>
+
+        <div id="stories-list-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Professional Creator Credit -->
+      <div class="creator-credit-card">
+        <div class="creator-header">
+          <span class="creator-sparkle">✨</span>
+          <div class="creator-title-text">
+            <span class="lbl-creator-pre">আন্তরিকতার সাথে প্রস্তুতকারী:</span>
+            <strong class="creator-name-highlight">মোস্তাফিজ (Mustafiz)</strong>
+          </div>
+        </div>
+        <p class="creator-dua-quote lbl-creator-dua">"যে ব্যক্তি কল্যাণের পথ দেখায়, সে আমলকারীর সমপরিমাণ সওয়াব লাভ করে।" (সহিহ মুসলিম) • আপনার দোয়ায় স্মরণ রাখার বিনীত অনুরোধ 🤲</p>
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: TASBIH & DHIKR GUIDE ================= -->
+        <!-- ================= TAB 3: TASBIH & DHIKR GUIDE ================= -->
+    <section id="tab-tasbih" class="tab-content">
+      <div class="tasbih-wrap">
+
+        <!-- Streak & Activity Analytics Banner -->
+        <div class="streak-card">
+          <div class="streak-top">
+            <div class="streak-badge-wrap">
+              <span class="streak-flame-icon">🔥</span>
+              <div>
+                <div class="streak-headline" id="streak-days-text">1 Day Active</div>
+                <div class="streak-rank-tag" id="streak-rank-badge">Steadfast Believer (অবিচল মুমিন)</div>
+              </div>
+            </div>
+            <span style="font-size: 1.1rem; color: var(--gold);">⚡</span>
+          </div>
+          <div class="streak-grid">
+            <div class="streak-grid-item">
+              <div class="streak-stat-val" id="stat-today-beads">0</div>
+              <span class="streak-stat-lbl" id="lbl-today-beads">Today's Dhikr</span>
+            </div>
+            <div class="streak-grid-item">
+              <div class="streak-stat-val" id="stat-total-beads">0</div>
+              <span class="streak-stat-lbl" id="lbl-total-beads">Lifetime Count</span>
+            </div>
+            <div class="streak-grid-item">
+              <div class="streak-stat-val" id="stat-today-prayers">0/5</div>
+              <span class="streak-stat-lbl" id="lbl-today-prayers">Prayers Done</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Dhikr Card -->
+        <div class="dhikr-selector" onclick="cycleDhikr()">
+          <div>
+            <span class="dhikr-arabic" id="tasbih-arabic">سُبْحَانَ اللَّهِ</span>
+            <span class="dhikr-meaning" id="tasbih-trans">SubhanAllah (Glory be to Allah)</span>
+          </div>
+          <span style="font-size: 1.25rem; color: var(--gold);">↻</span>
+        </div>
+
+        <!-- Target Presets -->
+        <div class="preset-pills">
+          <div class="preset-pill active" onclick="setTasbihTarget(33, this)">33</div>
+          <div class="preset-pill" onclick="setTasbihTarget(99, this)">99</div>
+          <div class="preset-pill" onclick="setTasbihTarget(100, this)">100</div>
+          <div class="preset-pill" onclick="setTasbihTarget(0, this)" id="lbl-free-count">Free</div>
+        </div>
+
+        <!-- Dynamic Circular SVG Counter Button (Ultra-responsive on Touch & Click) -->
+        <div class="counter-ring-container" id="tasbih-touch-area" role="button" tabindex="0" onclick="handleTasbihClick(event)" onpointerdown="handleTasbihPointer(event)">
+          <svg class="counter-svg" viewBox="0 0 220 220">
+            <defs>
+              <linearGradient id="goldEmeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#10B981" />
+              </linearGradient>
+            </defs>
+            <circle class="counter-circle-bg" cx="110" cy="110" r="95"></circle>
+            <circle class="counter-circle-progress" id="tasbih-progress-ring" cx="110" cy="110" r="95" stroke-dasharray="597" stroke-dashoffset="597"></circle>
+          </svg>
+          <div class="counter-touch-body" id="counter-touch-body-el">
+            <div class="counter-big-num" id="tasbih-count">0</div>
+            <div class="counter-target-text" id="tasbih-target-label">Target: 33</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="tasbih-controls">
+          <button class="btn-icon" title="Reset" onclick="resetTasbih()" style="width: 50px; height: 50px; font-size: 20px;">↺</button>
+          <button class="btn-icon" title="Sound" onclick="toggleTasbihSound()" id="btn-sound" style="width: 50px; height: 50px; font-size: 20px;">🔔</button>
+        </div>
+
+        <!-- Tazbih Guide & What to Read with Virtues -->
+        <div class="tazbih-guide-card">
+          <div class="tazbih-guide-header">
+            <span class="tazbih-guide-title">
+              <span>📖</span> <span id="lbl-guide-title">Tasbih Guide &amp; Virtues</span>
+            </span>
+          </div>
+          <div id="guide-items-container">
+            <!-- Dynamic Dhikr Guide rendered here -->
+          </div>
+        </div>
+
+        <!-- Professional Creator Credit -->
+        <div class="creator-credit-card" style="width: 100%;">
+          <div class="creator-header">
+            <span class="creator-sparkle">✨</span>
+            <div class="creator-title-text">
+              <span class="lbl-creator-pre">আন্তরিকতার সাথে প্রস্তুতকারী:</span>
+              <strong class="creator-name-highlight">মোস্তাফিজ (Mustafiz)</strong>
+            </div>
+          </div>
+          <p class="creator-dua-quote lbl-creator-dua">"যে ব্যক্তি কল্যাণের পথ দেখায়, সে আমলকারীর সমপরিমাণ সওয়াব লাভ করে।" (সহিহ মুসলিম) • আপনার দোয়ায় স্মরণ রাখার বিনীত অনুরোধ 🤲</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: SETTINGS & PREFERENCES ================= -->
+    <section id="tab-settings" class="tab-content">
+      <!-- Language Setting -->
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-set-lang-title">Language / ভাষা</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-app-lang">App Language</div>
+            <div class="setting-desc" id="lbl-app-lang-desc">English or বাংলা</div>
+          </div>
+          <select id="select-lang" onchange="setLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="bn">বাংলা (Bengali)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Location Setting -->
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-set-loc-title">Location &amp; Coordinates</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-preset-city">Preset City</div>
+            <div class="setting-desc" id="lbl-preset-city-desc">Auto-configures latitude &amp; longitude</div>
+          </div>
+          <select id="select-city" onchange="onCityChange(this.value)">
+            <option value="dhaka">Dhaka (ঢাকা)</option>
+            <option value="chittagong">Chittagong (চট্টগ্রাম)</option>
+            <option value="sylhet">Sylhet (সিলেট)</option>
+            <option value="rajshahi">Rajshahi (রাজশাহী)</option>
+            <option value="khulna">Khulna (খুলনা)</option>
+            <option value="london">London (লন্ডন)</option>
+            <option value="newyork">New York (নিউ ইয়র্ক)</option>
+            <option value="riyadh">Riyadh (রিয়াদ)</option>
+            <option value="dubai">Dubai (দুবাই)</option>
+            <option value="kualalumpur">Kuala Lumpur (কুয়ালালামপুর)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-gps-loc">GPS Auto Location</div>
+            <div class="setting-desc" id="lbl-gps-loc-desc">Detect exact coordinates using GPS</div>
+          </div>
+          <button class="btn-primary" style="padding: 8px 14px;" onclick="detectGPSLocation()">📡 Detect</button>
+        </div>
+      </div>
+
+      <!-- Calculation Preferences -->
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-set-calc-title">Calculation Preferences</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-asr-madhhab">Asr Jurisprudence (Madhhab)</div>
+            <div class="setting-desc" id="lbl-asr-desc">Hanafi (Standard in BD) or Shafi'i</div>
+          </div>
+          <select id="select-madhhab" onchange="onMadhhabChange(this.value)">
+            <option value="1">Hanafi (হানাফি - Standard in BD)</option>
+            <option value="0">Shafi'i, Maliki, Hanbali (শাফেয়ী)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-calc-method">Calculation Method</div>
+            <div class="setting-desc" id="lbl-calc-method-desc">Twilight angle conventions</div>
+          </div>
+          <select id="select-method" onchange="onMethodChange(this.value)">
+            <option value="karachi">Karachi (Univ. of Islamic Sciences)</option>
+            <option value="mwl">Muslim World League (MWL)</option>
+            <option value="isna">ISNA (North America)</option>
+            <option value="makkah">Umm Al-Qura (Makkah)</option>
+            <option value="egypt">Egyptian General Authority</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Background Reminders Test -->
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-bg-title">Background Reminders &amp; Azan</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-test-notif">Test Notification &amp; Chime</div>
+            <div class="setting-desc" id="lbl-test-notif-desc">Test status bar notification and Azan chime</div>
+          </div>
+          <button class="btn-primary" style="padding: 8px 14px;" onclick="testAzanNotification()">🔔 Test Alert</button>
+        </div>
+      </div>
+
+            <!-- Mosque Azan Schedule Setting Group -->
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-mosque-azan-title">🕌 Mosque Azan Times (মসজিদের আযানের সময়)</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-azan-mode">Schedule Mode</div>
+            <div class="setting-desc" id="lbl-azan-mode-desc">Use local mosque Azan times or raw waqt</div>
+          </div>
+          <select id="select-azan-mode" onchange="toggleMosqueAzanMode(this.value)">
+            <option value="mosque">Mosque Azan Schedule (Dhuhr 1:00 PM) - ডিফল্ট</option>
+            <option value="astronomical">Astronomical Waqt Start (ওয়াক্ত শুরু)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-dhuhr-azan">Dhuhr Azan Time (যোহরের আযান)</div>
+            <div class="setting-desc" id="lbl-dhuhr-desc">Standard BD mosque timing: 1:00 PM</div>
+          </div>
+          <select id="select-dhuhr-time" onchange="setCustomAzanTime('dhuhr', this.value)">
+            <option value="13:00">01:00 PM (Standard / প্রচলিত)</option>
+            <option value="13:15">01:15 PM</option>
+            <option value="13:30">01:30 PM</option>
+            <option value="12:45">12:45 PM</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-fajr-azan">Fajr Azan Time (ফজরের আযান)</div>
+            <div class="setting-desc" id="lbl-fajr-desc">Standard BD mosque timing: 5:00 AM</div>
+          </div>
+          <select id="select-fajr-time" onchange="setCustomAzanTime('fajr', this.value)">
+            <option value="05:00">05:00 AM (Standard / প্রচলিত)</option>
+            <option value="04:45">04:45 AM</option>
+            <option value="05:15">05:15 AM</option>
+            <option value="05:30">05:30 AM</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-asr-azan">Asr Azan Time (আসরের আযান)</div>
+            <div class="setting-desc" id="lbl-asr-desc">Standard BD mosque timing: 4:15 PM</div>
+          </div>
+          <select id="select-asr-time" onchange="setCustomAzanTime('asr', this.value)">
+            <option value="16:15">04:15 PM (Standard / প্রচলিত)</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="16:30">04:30 PM</option>
+            <option value="16:45">04:45 PM</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label" id="lbl-isha-azan">Isha Azan Time (এশার আযান)</div>
+            <div class="setting-desc" id="lbl-isha-desc">Standard BD mosque timing: 7:45 PM</div>
+          </div>
+          <select id="select-isha-time" onchange="setCustomAzanTime('isha', this.value)">
+            <option value="19:45">07:45 PM (Standard / প্রচলিত)</option>
+            <option value="19:30">07:30 PM</option>
+            <option value="20:00">08:00 PM</option>
+            <option value="20:15">08:15 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-group-title" id="lbl-about-title">About App</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Namaz Reminder</div>
+            <div class="setting-desc">Version 1.0.0 • 100% Offline, Secure &amp; Private</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sincere Dua for Mustafiz -->
+            <!-- Professional Creator & Sincere Dua Credit -->
+      <div class="creator-credit-card">
+        <div class="creator-header">
+          <span class="creator-sparkle">✨</span>
+          <div class="creator-title-text">
+            <span class="lbl-creator-pre">আন্তরিকতার সাথে প্রস্তুতকারী:</span>
+            <strong class="creator-name-highlight">মোস্তাফিজ (Mustafiz)</strong>
+          </div>
+        </div>
+        <p class="creator-dua-quote lbl-creator-dua">"যে ব্যক্তি কল্যাণের পথ দেখায়, সে আমলকারীর সমপরিমাণ সওয়াব লাভ করে।" (সহিহ মুসলিম) • আপনার দোয়ায় স্মরণ রাখার বিনীত অনুরোধ 🤲</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Azan Playing Notification Bar -->
+  <div id="azan-active-bar" class="azan-active-bar">
+    <div class="azan-active-left">
+      <div class="sound-waves">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div>
+        <div class="azan-active-title" id="azan-active-title">🕌 Dhuhr Azan Playing</div>
+        <div class="azan-active-sub" id="azan-active-sub">Allahu Akbar, Allahu Akbar...</div>
+      </div>
+    </div>
+    <button class="stop-azan-btn" onclick="stopActiveAzan()">
+      <span>⏹️</span> <span id="lbl-stop-azan">Stop Azan</span>
+    </button>
+  </div>
+
+  <!-- Mosque Timing Quick Adjust Modal -->
+  <div class="modal-overlay" id="timing-adjust-modal">
+    <div class="modal-box">
+      <div class="modal-icon">🕌</div>
+      <div class="modal-title" id="lbl-adjust-modal-title">Mosque Azan Schedule</div>
+      <div class="modal-subtitle" id="lbl-adjust-modal-sub">Set Azan times to match your local neighborhood mosque:</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; margin: 16px 0; text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 10px;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: #fff;">🌞 Dhuhr Azan (যোহর)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Standard BD: 1:00 PM</div>
+          </div>
+          <select id="quick-dhuhr" style="padding: 6px 10px; border-radius: 8px; background: #0F172A; color: #F59E0B; border: 1px solid var(--gold); font-weight: 700;" onchange="setCustomAzanTime('dhuhr', this.value)">
+            <option value="13:00">01:00 PM</option>
+            <option value="13:15">01:15 PM</option>
+            <option value="13:30">01:30 PM</option>
+            <option value="12:45">12:45 PM</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 10px;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: #fff;">🌅 Fajr Azan (ফজর)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Standard BD: 5:00 AM</div>
+          </div>
+          <select id="quick-fajr" style="padding: 6px 10px; border-radius: 8px; background: #0F172A; color: #F59E0B; border: 1px solid var(--gold); font-weight: 700;" onchange="setCustomAzanTime('fajr', this.value)">
+            <option value="05:00">05:00 AM</option>
+            <option value="04:45">04:45 AM</option>
+            <option value="05:15">05:15 AM</option>
+            <option value="05:30">05:30 AM</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 10px;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: #fff;">🌤️ Asr Azan (আসর)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Standard BD: 4:15 PM</div>
+          </div>
+          <select id="quick-asr" style="padding: 6px 10px; border-radius: 8px; background: #0F172A; color: #F59E0B; border: 1px solid var(--gold); font-weight: 700;" onchange="setCustomAzanTime('asr', this.value)">
+            <option value="16:15">04:15 PM</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="16:30">04:30 PM</option>
+            <option value="16:45">04:45 PM</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 10px;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: #fff;">🌙 Isha Azan (এশা)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Standard BD: 7:45 PM</div>
+          </div>
+          <select id="quick-isha" style="padding: 6px 10px; border-radius: 8px; background: #0F172A; color: #F59E0B; border: 1px solid var(--gold); font-weight: 700;" onchange="setCustomAzanTime('isha', this.value)">
+            <option value="19:45">07:45 PM</option>
+            <option value="19:30">07:30 PM</option>
+            <option value="20:00">08:00 PM</option>
+            <option value="20:15">08:15 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-primary" style="width: 100%; justify-content: center; padding: 10px;" onclick="closeTimingModal()">
+        <span>✓</span> <span id="lbl-save-close">Save &amp; Apply / সংরক্ষণ</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- First-Time Language Selection Modal -->
+  <div class="modal-overlay" id="first-time-modal">
+    <div class="modal-box">
+      <div class="modal-icon">🕌</div>
+      <div class="modal-title">Welcome to Namaz Reminder</div>
+      <div class="modal-subtitle">নামাজ রিমাইন্ডার অ্যাপে স্বাগতম। অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন / Select your preferred language:</div>
+      <button class="lang-choice-btn" onclick="chooseFirstLanguage('bn')">
+        <span>🇧🇩 বাংলা (Bengali)</span>
+        <span>→</span>
+      </button>
+      <button class="lang-choice-btn" onclick="chooseFirstLanguage('en')">
+        <span>🌐 English</span>
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('prayer')">
+      <span class="nav-icon">🕌</span>
+      <span id="nav-lbl-prayer">Prayers</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('motivation')">
+      <span class="nav-icon">✨</span>
+      <span id="nav-lbl-quotes">Motivation</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tasbih')">
+      <span class="nav-icon">📿</span>
+      <span id="nav-lbl-tasbih">Tasbih</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('settings')">
+      <span class="nav-icon">⚙️</span>
+      <span id="nav-lbl-settings">Settings</span>
+    </div>
+  </nav>
+
+  <script>
+    /* ================= SAFE STORAGE (PREVENTS DESKTOP FILE:// CRASHES) ================= */
+    const SafeStorage = {
+      _mem: {},
+      get(key, defaultVal) {
+        try {
+          if (typeof localStorage !== "undefined") {
+            const val = localStorage.getItem(key);
+            if (val !== null) return val;
+          }
+        } catch (e) {}
+        return this._mem[key] !== undefined ? this._mem[key] : defaultVal;
+      },
+      set(key, val) {
+        this._mem[key] = String(val);
+        try {
+          if (typeof localStorage !== "undefined") {
+            localStorage.setItem(key, String(val));
+          }
+        } catch (e) {}
+      },
+      getItem(key) {
+        return this.get(key, null);
+      },
+      setItem(key, val) {
+        this.set(key, val);
+      },
+      removeItem(key) {
+        delete this._mem[key];
+        try {
+          if (typeof localStorage !== "undefined") {
+            localStorage.removeItem(key);
+          }
+        } catch (e) {}
+      }
+    };
+
+    /* ================= BILINGUAL DICTIONARY (EN & BN) ================= */
+    let currentLang = SafeStorage.get("noor_lang", "en");
+
+    const STRINGS = {
+      en: {
+        appHeading: "Namaz Reminder",
+        appSub: "Namaz, Stories & Inner Peace",
+        ambientOn: "Serene Vibe",
+        ambientOff: "Muted",
+        storiesTitle: "Stories of Prophets & Islam",
+        storiesSub: "Inspiring historical events & eternal moral lessons",
+        prevQuote: "Previous",
+        nextQuoteBtn: "Next",
+        todayBeads: "Today's Dhikr",
+        lifetimeBeads: "Lifetime Beads",
+        prayersDone: "Prayers Done",
+        streakDays: "Days Active",
+        readStory: "Read Full Story",
+        moralLesson: "Key Lesson",
+        creatorPre: "Crafted with sincere devotion by:",
+        creatorDua: "\"Whoever guides someone to goodness will have a similar reward.\" (Sahih Muslim) • Duas are humbly requested 🤲",
+        nextPrayer: "Next Prayer",
+        trackerTitle: "Daily Prayer Check-In",
+        scheduleTitle: "Today's Azan & Prayer Times",
+        scheduleSubtitle: "Accurate solar timing for your location",
+        testAzan: "Test Azan",
+        nextQuote: "Next Quote",
+        freeCount: "Free",
+        guideTitle: "Tasbih Guide & Virtues",
+        setLangTitle: "Language",
+        appLang: "App Language",
+        appLangDesc: "English or বাংলা",
+        setLocTitle: "Location & Coordinates",
+        presetCity: "Preset City",
+        presetCityDesc: "Auto-configures latitude & longitude",
+        gpsLoc: "GPS Auto Location",
+        gpsLocDesc: "Detect exact coordinates using GPS",
+        setCalcTitle: "Calculation Preferences",
+        asrMadhhab: "Asr Jurisprudence (Madhhab)",
+        asrDesc: "Hanafi (Standard in BD) or Shafi'i",
+        calcMethod: "Calculation Method",
+        calcMethodDesc: "Twilight angle conventions",
+        bgTitle: "Background Reminders & Azan",
+        testNotif: "Test Notification & Chime",
+        testNotifDesc: "Test status bar notification and Azan chime",
+        aboutTitle: "About App",
+        navPrayer: "Prayers",
+        navQuotes: "Motivation",
+        navTasbih: "Tasbih",
+        navSettings: "Settings",
+        fajr: "Fajr",
+        sunrise: "Sunrise (Ishraq)",
+        dhuhr: "Dhuhr",
+        asr: "Asr",
+        maghrib: "Maghrib",
+        isha: "Isha",
+        completed: "Completed",
+        qibla: "Qibla",
+        target: "Target",
+        duaText: "Crafted with devotion by Mustafiz • Please remember in your sincere Duas 🤲",
+        mosqueTimingPill: "Mosque Azan Schedule",
+        stopAzan: "Stop Azan",
+        lblSaveClose: "Save & Apply / সংরক্ষণ",
+        adjustTitle: "Mosque Azan Schedule",
+        adjustSub: "Set Azan times to match your local neighborhood mosque:"
+      },
+      bn: {
+        appHeading: "নামাজ রিমাইন্ডার",
+        appSub: "নামাজ, নবীদের কাহিনী ও প্রশান্তি",
+        ambientOn: "প্রশান্ত সুর",
+        ambientOff: "সুর বন্ধ",
+        storiesTitle: "নবী ও সাহাবাদের প্রেরণাদায়ক কাহিনী",
+        storiesSub: "ইতিহাসের অনন্য শিক্ষণীয় ঘটনা ও আত্মশুদ্ধি",
+        prevQuote: "আগের উক্তি",
+        nextQuoteBtn: "পরবর্তী উক্তি",
+        todayBeads: "আজকের জিকির",
+        lifetimeBeads: "সর্বমোট গণনা",
+        prayersDone: "আজকের নামাজ",
+        streakDays: "দিনের ধারাবাহিকতা",
+        readStory: "পুরো ঘটনা পড়ুন",
+        moralLesson: "মূল শিক্ষা",
+        creatorPre: "আন্তরিকতার সাথে প্রস্তুতকারী:",
+        creatorDua: "\"যে ব্যক্তি কল্যাণের পথ দেখায়, সে আমলকারীর সমপরিমাণ সওয়াব লাভ করে।\" (সহিহ মুসলিম) • আপনার দোয়ায় স্মরণ রাখার বিনীত অনুরোধ 🤲",
+        nextPrayer: "পরবর্তী নামাজ",
+        trackerTitle: "দৈনিক নামাজ ট্র্যাকার",
+        scheduleTitle: "আজকের আযান ও নামাজের সময়সূচি",
+        scheduleSubtitle: "আপনার স্থানের সঠিক সৌর সময়সূচি",
+        testAzan: "আযান টেস্ট",
+        nextQuote: "নতুন উক্তি",
+        freeCount: "উন্মুক্ত",
+        guideTitle: "তসবিহ নির্দেশিকা ও ফজিলত",
+        setLangTitle: "ভাষা নির্বাচন",
+        appLang: "অ্যাপের ভাষা",
+        appLangDesc: "English অথবা বাংলা",
+        setLocTitle: "স্থান ও স্থানাঙ্ক",
+        presetCity: "শহর নির্বাচন",
+        presetCityDesc: "অক্ষাংশ ও দ্রাঘিমাংশ স্বয়ংক্রিয়ভাবে নির্ধারণ",
+        gpsLoc: "জিপিএস অটো লোকেশন",
+        gpsLocDesc: "জিপিএস দিয়ে সঠিক স্থান নির্ধারণ",
+        setCalcTitle: "নামাজের হিসাব পদ্ধতি",
+        asrMadhhab: "আসরের মাযহাব",
+        asrDesc: "হানাফি (বাংলাদেশে প্রচলিত) বা শাফেয়ী",
+        calcMethod: "হিসাবের কনভেনশন",
+        calcMethodDesc: "ফজর ও এশার কোণ নির্ধারণ পদ্ধতি",
+        bgTitle: "ব্যাকগ্রাউন্ড রিমাইন্ডার ও আযান",
+        testNotif: "নোটিফিকেশন ও সুর পরীক্ষা",
+        testNotifDesc: "স্ট্যাটাস বার নোটিফিকেশন ও আযানের সুর পরীক্ষা করুন",
+        aboutTitle: "অ্যাপ পরিচিতি",
+        navPrayer: "নামাজ",
+        navQuotes: "মোটিভেশন",
+        navTasbih: "তসবিহ",
+        navSettings: "সেটিংস",
+        fajr: "ফজর",
+        sunrise: "সূর্যোদয় (ইশরাক)",
+        dhuhr: "যোহর",
+        asr: "আসর",
+        maghrib: "মাগরিব",
+        isha: "এশা",
+        completed: "সম্পন্ন",
+        qibla: "কিবলা",
+        target: "লক্ষ্য",
+        duaText: "মুস্তাফিজের আন্তরিক প্রচেষ্টায় তৈরি • আপনার দোয়ায় স্মরণ রাখবেন 🤲",
+        mosqueTimingPill: "মসজিদের আযানের সময়সূচি",
+        stopAzan: "আযান থামান",
+        lblSaveClose: "সংরক্ষণ ও প্রয়োগ",
+        adjustTitle: "মসজিদের আযানের সময়সূচি",
+        adjustSub: "আপনার এলাকার মসজিদের সাথে আযানের সময় মিলিয়ে নিন:"
+      }
+    };
+
+    
+    
+
+    
+
+    /* ================= FAMOUS ISLAMIC STORIES DATABASE ================= */
+    const STORIES_DATA = [
+      {
+        id: "taif",
+        icon: "🕊️",
+        cat: { en: "Mercy & Sabr", bn: "ধৈর্য ও ক্ষমা" },
+        title: {
+          en: "Prophet Muhammad ﷺ at Ta'if: Mercy over Vengeance",
+          bn: "রাসুলুল্লাহ ﷺ ও তায়েফের পরম ধৈর্য: প্রতিশোধের বদলে রহমত"
+        },
+        subtitle: {
+          en: "When stoned until his sandals filled with blood, he prayed for their guidance instead of destruction.",
+          bn: "রক্তাক্ত শরীরে পাথর নিক্ষেপের মুখেও অভিশাপ না দিয়ে হেদায়েতের দোয়া করেছিলেন।"
+        },
+        lesson: {
+          en: "Patience (Sabr) in hardship and responding to hatred with compassion is the highest virtue of a believer.",
+          bn: "চরম আঘাত ও অন্যায়ের মুখেও ধৈর্য ধারণ করা এবং শত্রুকেও ক্ষমা করে কল্যাণের পথ দেখানো মুমিনের শ্রেষ্ঠ গুণ।"
+        },
+        fullStory: {
+          en: `After the passing of his beloved wife Khadijah (RA) and his uncle Abu Talib, the Prophet Muhammad ﷺ traveled on foot to the city of Ta'if hoping they would listen to the message of Islam.<br><br>Instead, the leaders of Ta'if mocked him and incited the street youth and slaves to pelt him with stones. As the Prophet ﷺ walked, stones struck his legs until his sandals were filled with blood. He sought refuge in an orchard, exhausted and wounded, yet his only complaint was made to Allah:<br><br><em>"O Allah, to You alone I complain of my weakness, my lack of resources, and my insignificance before people..."</em><br><br>The Angel Jibreel (Gabriel) then appeared with the Angel of the Mountains, saying: <em>"If you wish, O Messenger of Allah, I will crush them between the two mountains!"</em><br><br>The Prophet of Mercy ﷺ replied without hesitation:<br><strong>"No. Rather, I hope that Allah will raise from their offspring people who will worship Allah alone, associating none with Him."</strong><br><br>SubhanAllah! Ta'if later became a flourishing center of Islam.`,
+          bn: `প্রিয়তমা সহধর্মিণী উম্মুল মুমিনীন খাদিজা (রা.) এবং স্নেহশীল চাচা আবু তালিবের ইন্তেকালের পর ইসলামের দাওয়াত নিয়ে মহানবী হযরত মুহাম্মদ ﷺ পায়ে হেঁটে তায়েফ শহরে গমন করেন।<br><br>কিন্তু তায়েফের নেতৃবৃন্দ তাঁর কথা তো শুনলই না, বরং শহরের দুষ্ট কিশোর ও দাসদের লেলিয়ে দিয়ে তাঁর দিকে অবিরত পাথর নিক্ষেপ করতে থাকে। পাথরের আঘাতে আল্লাহর রাসুল ﷺ-এর পবিত্র পা মোবারক ক্ষতবিক্ষত হয়ে রক্তে পাদুকা ভিজে যায়। তিনি রক্তাক্ত শরীরে একটি আঙ্গুর বাগানে আশ্রয় নেন এবং কাতর কণ্ঠে মহান আল্লাহর দরবারে মুনাজাত করেন:<br><br><em>"হে আল্লাহ! আমি কেবল তোমারই কাছে আমার দুর্বলতা, উপায়হীনতা এবং মানুষের কাছে তুচ্ছ হওয়ার অভিযোগ পেশ করছি..."</em><br><br>এমন সময় জিব্রাইল (আ.) পাহাড়ের দায়িত্বে নিয়োজিত ফেরেশতাসহ আবির্ভূত হয়ে বললেন: <em>"হে আল্লাহর রাসুল! আপনি অনুমতি দিলে তায়েফের দুই পাশের পাহাড় একত্র করে এদের পিষে মাটির সাথে মিশিয়ে দেব!"</em><br><br>কিন্তু রহমাতুল্লিল আলামিন ﷺ এক মুহূর্তও দ্বিধা না করে বললেন:<br><strong>"না! বরং আমি আশা করি, আল্লাহ এদের বংশধরদের মধ্য থেকে এমন সন্তান জন্ম দেবেন যারা একমাত্র আল্লাহর ইবাদত করবে এবং তাঁর সাথে কাউকে শরিক করবে না।"</strong><br><br>সুবহানাল্লাহ! পরবর্তীতে সেই তায়েফের অধিবাসীরাই দলে দলে ইসলাম গ্রহণ করে মহান পথের সৈনিক হয়েছিল।`
+        }
+      },
+      {
+        id: "yusuf",
+        icon: "👑",
+        cat: { en: "Integrity & Honor", bn: "নৈতিকতা ও মর্যাদা" },
+        title: {
+          en: "Prophet Yusuf (AS): From the Dark Well to the Throne",
+          bn: "হযরত ইউসুফ (আ.): অন্ধকার কূপ ও কারাগার থেকে মিসরের সিংহাসনে"
+        },
+        subtitle: {
+          en: "Betrayed by brothers and falsely imprisoned, his unyielding trust in Allah led him to victory.",
+          bn: "ভাইদের ষড়যন্ত্র ও মিথ্যা অপবাদে বন্দিদশা সত্ত্বেও আল্লাহর ওপর তাওয়াক্কুল তাঁকে সর্বোচ্চ সম্মানে ভূষিত করে।"
+        },
+        lesson: {
+          en: "Betrayal and worldly hardship can never extinguish the light of one who remains truthful and chaste.",
+          bn: "আল্লাহর ওপর ভরসা ও চারিত্রিক পবিত্রতা বজায় রাখলে কোনো ষড়যন্ত্রই মানুষকে পরাজিত করতে পারে না।"
+        },
+        fullStory: {
+          en: `Prophet Yusuf (AS) was thrown into a deep, dark well by his own jealous brothers and sold into slavery in Egypt for a few measly dirhams.<br><br>In the palace of Al-Aziz, when tempted by the chief's wife, he declared: <em>"I seek refuge in Allah! Indeed, my Lord has given me a good home, and wrongdoers never prosper."</em> He chose years of false imprisonment over disobeying Allah.<br><br>In prison, he continued to call people to the oneness of Allah and interpreted dreams with divine wisdom. Years later, when the King of Egypt needed an honest and capable leader to save the nation from a catastrophic seven-year famine, Yusuf (AS) was exonerated and appointed treasurer and ruler of Egypt.<br><br>When his brothers arrived begging for grain, unaware of his identity, Yusuf (AS) revealed himself. Instead of seeking revenge, he said:<br><strong>"No blame will there be upon you today. Allah will forgive you; and He is the most merciful of the merciful." (Surah Yusuf 12:92)</strong>`,
+          bn: `হযরত ইউসুফ (আ.)-কে তাঁর সৎ ভাইয়েরা হিংসার বশবর্তী হয়ে নির্জন অন্ধকার কূপে ফেলে দেয় এবং পরবর্তীতে মাত্র কয়েক দিরহামের বিনিময়ে মিসরের বাজারে দাস হিসেবে বিক্রি করে দেওয়া হয়।<br><br>মিসরের আযীযের প্রাসাদে যখন তিনি তীব্র প্রলোভনের মুখোমুখি হন, তখন তিনি দ্ব্যর্থহীন কণ্ঠে ঘোষণা করেন: <em>"আল্লাহর আশ্রয় চাই! তিনি আমার প্রভু, তিনি আমাকে উত্তম মর্যাদা দিয়েছেন। নিশ্চয়ই যালেমরা সফলকাম হয় না।"</em> তিনি গুনাহ থেকে বাঁচতে দীর্ঘ বছর মিথ্যা অপবাদে বন্দিজীবন মেনে নেন।<br><br>কারাগারেও তিনি মানুষকে আল্লাহর তাওহিদের দাওয়াত দিতেন। বহু বছর পর যখন মিসরে ৭ বছরের মহাদুর্ভিক্ষ আসন্ন হয়ে পড়ে, তখন বাদশাহর স্বপ্নের সঠিক ব্যাখ্যা দিয়ে এবং দুর্নীতির ঊর্ধ্বে বিশ্বস্ততার প্রমাণ রেখে তিনি কারাগার থেকে মুক্তি পান এবং মিসরের অর্থমন্ত্রী ও শাসনকর্তা হিসেবে অধিষ্ঠিত হন।<br><br>পরবর্তীতে যে ভাইয়েরা তাঁকে কূপে ফেলে দিয়েছিল, তারা যখন ক্ষুধার্ত অবস্থায় শস্য নিতে আসে, তখন ইউসুফ (আ.) প্রতিশোধ নেওয়ার পূর্ণ ক্ষমতা থাকা সত্ত্বেও তাদের জড়িয়ে ধরে বলেছিলেন:<br><strong>"আজ তোমাদের বিরুদ্ধে আমার কোনো অভিযোগ নেই। আল্লাহ তোমাদের ক্ষমা করুন, আর তিনিই শ্রেষ্ঠ দয়ালু।" (সূরা ইউসুফ: ৯২)</strong>`
+        }
+      },
+      {
+        id: "ibrahim",
+        icon: "🔥",
+        cat: { en: "Tawakkul & Faith", bn: "তাওয়াক্কুল ও ঈমান" },
+        title: {
+          en: "Prophet Ibrahim (AS): The Blazing Fire Turned into Peace",
+          bn: "হযরত ইব্রাহিম (আ.) ও নমরুদের অগ্নিকুণ্ড: অগ্নির শীতল রূপ"
+        },
+        subtitle: {
+          en: "Catapulted into an enormous inferno, he uttered the words of ultimate trust in his Creator.",
+          bn: "বিশাল অগ্নিকুণ্ডে নিক্ষেপের মুহূর্তেও ভয় না পেয়ে অবিচল আস্থার ঘোষণা দিয়েছিলেন।"
+        },
+        lesson: {
+          en: "When your faith in Allah is absolute, worldly fires and crises lose their power to burn you.",
+          bn: "আল্লাহর ওপর পূর্ণ তাওয়াক্কুল থাকলে দুনিয়ার কোনো বিপদ বা অগ্নিকুণ্ড মুমিনকে ধ্বংস করতে পারে না।"
+        },
+        fullStory: {
+          en: `When Prophet Ibrahim (AS) shattered the idols of Babylon and called people to worship the One Creator, the tyrant King Namrud (Nimrod) built an enormous blazing fire so hot that birds flying overhead would burn.<br><br>Ibrahim (AS) was tied and placed into a catapult to be flung into the roaring inferno. Jibreel (AS) came to him and asked: <em>"O Ibrahim, do you need any help from me?"</em><br><br>Ibrahim (AS) calmly replied:<br><strong>"From you, no. But from Allah, yes! HasbunAllahu wa ni'mal Wakil (Allah alone is sufficient for us, and He is the best Disposer of affairs)."</strong><br><br>As he was hurled into the flames, Allah commanded the fire:<br><em>"O fire, be coolness and safety upon Ibrahim!" (Surah Al-Anbiya 21:69)</em>.<br><br>The fire only burned the ropes that bound his hands. Ibrahim (AS) sat amidst the embers unharmed, experiencing the sweetest peace.`,
+          bn: `হযরত ইব্রাহিম (আ.) যখন তৎকালীন বাবেল জাতির মূর্তি ভেঙে এক আল্লাহর ইবাদতের দাওয়াত দিলেন, তখন অহংকারী বাদশাহ নমরুদ ক্ষোভে উন্মত্ত হয়ে এক বিরাট অগ্নিকুণ্ড তৈরি করে। সেই আগুনের উত্তাপ এত তীব্র ছিল যে উপর দিয়ে উড়ে যাওয়া পাখিও পুড়ে ছাই হয়ে যেত।<br><br>ইব্রাহিম (আ.)-কে রশি দিয়ে বেঁধে এক বিশাল গুলতি (মিনজানিক)-এর সাহায্যে আগুনের মাঝে নিক্ষেপ করা হয়। নিক্ষেপের সেই অন্তিম মুহূর্তে ফেরেশতা জিব্রাইল (আ.) এসে বললেন: <em>"হে ইব্রাহিম! আপনার কি আমার কোনো সাহায্যের প্রয়োজন আছে?"</em><br><br>ইব্রাহিম (আ.) প্রশান্ত চিত্তে জবাব দিলেন:<br><strong>"তোমার কাছে কোনো সাহায্য প্রয়োজন নেই! আমার জন্য আল্লাহই যথেষ্ট, আর তিনিই সর্বোত্তম কর্মবিধায়ক (হাসবুনাল্লাহু ওয়া নি'মাল ওয়াকিল)।"</strong><br><br>তিনি আগুনে পড়ার সাথে সাথেই মহান আল্লাহ আগুনকে নির্দেশ দিলেন:<br><em>"হে আগুন! তুমি ইব্রাহিমের জন্য শীতল ও শান্তিদায়ক হয়ে যাও!" (সূরা আম্বিয়া: ৬৯)</em>।<br><br>আশ্চর্যজনকভাবে আগুন কেবল তাঁর হাতের বাঁধনটুকু পুড়িয়েছিল, কিন্তু তাঁর শরীর বা কাপড়ের একটি সুতোও স্পর্শ করতে পারেনি। তিনি পরম শান্তিতে সেই আগুনের মাঝে অবস্থান করেছিলেন।`
+        }
+      },
+      {
+        id: "musa",
+        icon: "🌊",
+        cat: { en: "Courage & Victory", bn: "সাহস ও বিজয়" },
+        title: {
+          en: "Prophet Musa (AS): The Parting of the Red Sea",
+          bn: "হযরত মুসা (আ.) ও লোহিত সাগরের অলৌকিক পথ"
+        },
+        subtitle: {
+          en: "Trapped between the army of Pharaoh and the deep sea, Musa declared: 'My Lord is with me!'",
+          bn: "সামনে উত্তাল সাগর আর পেছনে ফেরাউনের ঘাতক বাহিনী—এমন নিশ্চিত মৃত্যুর মুখেও অটল ঈমান।"
+        },
+        lesson: {
+          en: "Never despair when all human doors close; Allah can split an entire ocean to make a path for you.",
+          bn: "মানুষ যখন সব দিক থেকে পথ হারিয়ে ফেলে, তখন আল্লাহর ওপর ভরসা করলে সাগরের মাঝেও শুকনা পথ তৈরি হয়ে যায়।"
+        },
+        fullStory: {
+          en: `Prophet Musa (AS) led the oppressed Children of Israel out of Egypt under the cover of night. At dawn, they found themselves trapped at the edge of the Red Sea.<br><br>Behind them, Pharaoh and his formidable chariot army were closing in. In sheer panic, Musa's followers cried out: <em>"Indeed, we are doomed! We will be overtaken!" (Surah Ash-Shu'ara 26:61)</em>.<br><br>With majestic certainty, Prophet Musa (AS) replied:<br><strong>"No! Indeed, with me is my Lord; He will guide me!"</strong><br><br>Allah revealed to Musa: <em>"Strike the sea with your staff."</em> Musa struck the water, and the sea miraculously split into twelve dry pathways, with towering walls of water on either side like massive mountains.<br><br>Musa and his people walked across in safety. When Pharaoh and his soldiers plunged into the seabed in pursuit, the waters collapsed, drowning the tyrant and delivering the believers.`,
+          bn: `হযরত মুসা (আ.) বনী ইসরাঈলকে ফেরাউনের দাসত্ব ও নির্মম অত্যাচার থেকে মুক্ত করে রাতের আঁধারে রওনা হন। কিন্তু ভোরের আলো ফুটতেই তাঁরা নিজেদের লোহিত সাগরের তীরে আবিষ্কার করেন।<br><br>পেছনে তাকাতেই দেখা গেল স্বৈরাচারী ফেরাউন ও তার সশস্ত্র অশ্বারোহী বাহিনী তীব্র গতিতে ধেয়ে আসছে। সামনে উত্তাল অথৈ সাগর আর পেছনে মৃত্যু। বনী ইসরাঈলের লোকেরা ভয়ে আর্তনাদ করে বলল: <em>"আমরা তো নির্ঘাত ধরা পড়ে গেলাম!"</em><br><br>কিন্তু হযরত মুসা (আ.) বিন্দুমাত্র বিচলিত না হয়ে ঈমানের দৃঢ়তায় ঘোষণা করলেন:<br><strong>"কখনোই না! নিশ্চয়ই আমার সাথে আমার প্রতিপালক আছেন, তিনি অবশ্যই আমাকে পথ দেখাবেন!" (সূরা শুয়ারা: ৬২)</strong>。<br><br>অতঃপর আল্লাহর নির্দেশে মুসা (আ.) সাগরের পানিতে তাঁর লাঠি দিয়ে আঘাত করলেন। মুহূর্তের মধ্যে বিশাল লোহিত সাগর দ্বিখণ্ডিত হয়ে গেল এবং তাদের জন্য ১২টি শুকনো রাস্তা তৈরি হয়ে গেল। পানি দুই পাশে বিশালাকার পাহাড়ের মতো স্থির হয়ে দাঁড়িয়ে রইল।<br><br>মুসা (আ.) ও তাঁর দল নিরাপদে সাগর পার হলেন, আর ফেরাউন ও তার উদ্ধত বাহিনী সেই রাস্তায় নামতেই পানি তাদের ওপর ভেঙে পড়ে চিরতরে ডুবিয়ে ধ্বংস করে দিল।`
+        }
+      },
+      {
+        id: "yunus",
+        icon: "🐋",
+        cat: { en: "Repentance & Hope", bn: "তওবা ও মুক্তি" },
+        title: {
+          en: "Prophet Yunus (AS): The Supplication in Triple Darkness",
+          bn: "হযরত ইউনুস (আ.) ও মাছের পেটে শ্রেষ্ঠ তওবা"
+        },
+        subtitle: {
+          en: "In the darkness of the sea, the belly of the whale, and the night, his supplication brought deliverance.",
+          bn: "সমুদ্রের তলদেশে, মাছের পেটে এবং গভীর রাতের ত্রিবিধ অন্ধকারে করা দোয়া যা মুক্তির পথ দেখায়।"
+        },
+        lesson: {
+          en: "No matter how dark and suffocating your situation feels, sincere repentance and glorification of Allah will save you.",
+          bn: "পরিস্থিতি যতই অন্ধকার বা দমবন্ধ করা হোক না কেন, আন্তরিক তাওবা ও আল্লাহর তাসবিহ মানুষকে সকল সংকট থেকে উদ্ধার করে।"
+        },
+        fullStory: {
+          en: `Prophet Yunus (AS) left his city of Nineveh in frustration when his people persistently rejected the truth, without waiting for Allah's explicit permission.<br><br>He boarded a crowded ship, but a violent storm threatened to capsize the vessel. Lots were cast to lighten the load, and the lot fell upon Yunus (AS). He cast himself into the raging sea, where a massive whale swallowed him whole by the decree of Allah.<br><br>In the belly of the whale, in the depths of the ocean, under the pitch-black night, Yunus (AS) realized his error and called out with tears and complete submission:<br><br><strong>"Lā ilāha illā Anta, Subḥānaka, innī kuntu minaẓ-ẓālimīn"</strong><br><em>(There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers! — Surah Al-Anbiya 21:87)</em><br><br>Allah heard his prayer from inside the creature: <em>"So We responded to him and saved him from the distress. And thus do We save the believers."</em> The whale gently deposited Yunus (AS) upon the shore, where Allah caused a gourd vine to grow over him to heal his delicate skin.`,
+          bn: `হযরত ইউনুস (আ.) তাঁর সম্প্রদায় বারবার দ্বীনের দাওয়াত প্রত্যাখ্যান করায় ক্ষুব্ধ হয়ে মহান আল্লাহর স্পষ্ট অনুমতির অপেক্ষা না করেই শহর ত্যাগ করেন।<br><br>তিনি একটি জাহাজে ওঠেন, কিন্তু মাঝদরিয়ায় প্রচণ্ড ঝড়ের কবলে পড়ে জাহাজটি ডুবতে বসে। জাহাজের ভার কমাতে লটারির আয়োজন করা হলে প্রতিবারই ইউনুস (আ.)-এর নাম ওঠে। তিনি নিজেকে সাগরে সমর্পণ করলেন এবং আল্লাহর হুকুমে এক বিশাল তিমি মাছ তাঁকে আস্ত গিলে ফেলল।<br><br>মাছের পেটের ঘুটঘুটে অন্ধকার, গভীর সাগরের তলদেশের অন্ধকার এবং রাতের অন্ধকার—এই ত্রিবিধ নিকষ কালো অন্ধকারে নিমজ্জিত হয়ে হযরত ইউনুস (আ.) নিজের ভুল বুঝতে পারলেন এবং মহান আল্লাহর পবিত্রতা ঘোষণা করে কাতর কণ্ঠে অশ্রুসিক্ত মোনাজাত করলেন:<br><br><strong>"লা ইলাহা ইল্লা আনতা, সুবহানাকা ইন্নি কুনতু মিনায যলিমীন"</strong><br><em>(অর্থ: তুমি ছাড়া কোনো সত্য উপাস্য নেই, তুমি মহাপবিত্র! নিশ্চয়ই আমি অপরাধীদের অন্তর্ভুক্ত হয়ে গেছি। — সূরা আম্বিয়া: ৮৭)</em><br><br>মহান আল্লাহ তাঁর এই আন্তরিক দোয়া কবুল করলেন এবং মাছকে নির্দেশ দিলেন তাঁকে তীরে উগরে দিতে। আল্লাহ তাঁর সুরক্ষার জন্য সেখানে একটি ছায়াদানকারী লতাগুল্মের গাছ গজিয়ে দিলেন। রাসুলুল্লাহ ﷺ বলেছেন, কোনো মুসলিম যদি কোনো বিপদে পড়ে এই দোয়া পাঠ করে, আল্লাহ অবশ্যই তার দোয়া কবুল করবেন।`
+        }
+      },
+      {
+        id: "bilal",
+        icon: "🏜️",
+        cat: { en: "Steadfast Faith", bn: "ঈমানের দৃঢ়তা" },
+        title: {
+          en: "Bilal ibn Rabah (RA): 'Ahad! Ahad!' in the Scorching Sands",
+          bn: "হযরত বেলাল (রা.): উত্তপ্ত মরুভূমির বালুকারাশিতে 'আহাদ! আহাদ!'"
+        },
+        subtitle: {
+          en: "Crushed under burning boulders at noon in Makkah, his soul proclaimed the oneness of God.",
+          bn: "মক্কার তপ্ত বালুতে বুকের ওপর ভারী পাথর চাপা দিয়ে অত্যাচারের মুখেও তাওহিদের অবিচল ঘোষণা।"
+        },
+        lesson: {
+          en: "True faith cannot be broken by worldly tyranny; dignity belongs to those who fear none but Allah.",
+          bn: "পার্থিব কোনো নির্যাতন মুমিনের ঈমানকে নাড়াতে পারে না; প্রকৃত সম্মান কেবল আল্লাহর প্রতি অবিচল আনুগত্যেই নিহিত।"
+        },
+        fullStory: {
+          en: `Bilal ibn Rabah (RA), an Ethiopian slave in Makkah, was among the earliest to accept Islam. When his cruel master Umayyah ibn Khalaf discovered his faith, he subjected Bilal to unimaginable torture.<br><br>At scorching midday when the Arabian sand burned like red-hot coals, Umayyah dragged Bilal out, stripped him, and pinned him to the boiling ground. A gigantic, heavy boulder was rolled onto Bilal's chest, suffocating him under the blazing sun.<br><br>Umayyah demanded: <em>"Renounce Muhammad and worship Lat and Uzza, or you will die here!"</em><br><br>Gasping for breath, with ribs aching under the massive boulder, Bilal smiled and uttered the immortal phrase:<br><strong>"Aḥad! Aḥad!" (Allah is One! Allah is One!)</strong><br><br>No whip, no thirst, and no boulder could compel Bilal to utter words of disbelief. Abu Bakr As-Siddiq (RA) eventually purchased Bilal's freedom for a large sum. Years later, on the day Makkah was liberated, the Prophet ﷺ honored Bilal by instructing him to climb atop the Holy Ka'bah and call the very first Azan echoing across Makkah.`,
+          bn: `হযরত বেলাল ইবনে রাবাহ (রা.) ছিলেন তৎকালীন মক্কার এক হাবশী ক্রীতদাস। ইসলামের সূচনালগ্নেই তিনি রাসুলুল্লাহ ﷺ-এর আহ্বানে সাড়া দিয়ে ইসলাম গ্রহণ করেন। তাঁর নিষ্ঠুর প্রভু উমাইয়া ইবনে খালাফ যখন এই খবর জানতে পারে, তখন সে বেলালের ওপর অমানুষিক নির্যাতন শুরু করে।<br><br>গ্রীষ্মের প্রখর দুপুরে যখন মক্কার মরুভূমির বালুকারাশি ফুটন্ত তামার মতো গরম হতো, তখন বেলালকে উন্মুক্ত পিঠে তপ্ত বালুর ওপর শুইয়ে দেওয়া হতো। তাঁর বুকের ওপর বিশাল ভারী পাথর চাপা দিয়ে রাখা হতো যাতে তিনি নিঃশ্বাসও নিতে না পারেন।<br><br>উমাইয়া চাবুক মারতে মারতে বলত: <em>"মুহাম্মদকে অস্বীকার কর এবং লাত-উজ্জার পূজা কর, নতুবা এই পাথরের নিচেই তোর মৃত্যু হবে!"</em><br><br>কিন্তু অসহ্য যন্ত্রণার মাঝেও বেলাল (রা.)-এর মুখ দিয়ে কেবল একটি ধ্বনিই বের হতো:<br><strong>"আহাদ! আহাদ! (আল্লাহ এক! আল্লাহ এক!)"</strong><br><br>পার্থিব কোনো নির্যাতন তাঁর হৃদয় থেকে আল্লাহর ভালোবাসা মুছে ফেলতে পারেনি। পরবর্তীতে হযরত আবু বকর (রা.) বিপুল মূল্যের বিনিময়ে তাঁকে কিনে মুক্ত করে দেন। বছর কয়েক পর মক্কা বিজয়ের দিন রাসুলুল্লাহ ﷺ এই কৃষ্ণাঙ্গ সাহাবী হযরত বেলাল (রা.)-কেই পবিত্র কাবার ছাদে উঠে মক্কার বুকে প্রথম ঐতিহাসিক আযান দেওয়ার সর্বোচ্চ সম্মান প্রদান করেছিলেন।`
+        }
+      },
+      {
+        id: "umar",
+        icon: "⚖️",
+        cat: { en: "Justice & Humility", bn: "ন্যায়বিচার ও বিনয়" },
+        title: {
+          en: "Umar ibn Al-Khattab (RA): Carrying Flour in the Dark Night",
+          bn: "হযরত ওমর (রা.): রাতের অন্ধকারে প্রজার জন্য আটার বস্তা বহন"
+        },
+        subtitle: {
+          en: "The ruler of a vast empire walking in the night to feed starving children with his own hands.",
+          bn: "অর্ধপৃথিবীর শাসক হয়েও রাতের আঁধারে ক্ষুধার্ত শিশুর মুখে খাবার তুলে দিতে নিজের কাঁধে আটার বস্তা বহন।"
+        },
+        lesson: {
+          en: "True leadership is responsibility, empathy, and fearing accountability before Allah for the vulnerable.",
+          bn: "প্রকৃত নেতৃত্ব অহংকারের নয়, বরং জনগণের প্রতি গভীর দায়িত্ববোধ ও আল্লাহর দরবারে জবাবদিহিতার সর্বোচ্চ ভয়।"
+        },
+        fullStory: {
+          en: `During his caliphate, Umar ibn Al-Khattab (RA) would disguise himself at night and walk the streets of Madinah to inspect the condition of his people.<br><br>One night, he saw a distant fire in the desert. Approaching quietly, he found a woman surrounded by crying children. Over the fire was a pot of boiling water with stones inside. The woman was pretending to cook so the hungry children would fall asleep waiting.<br><br>Umar asked her why the children wept. The woman, not recognizing the Caliph, said: <em>"They are starving. And Allah will judge between us and Umar!"</em><br><br>Umar's eyes filled with tears. He rushed back to the public treasury (Bayt al-Mal) in Madinah, loaded a sack of flour and cooking fat onto his own back. His assistant Aslam offered: <em>"O Amir al-Mu'minin, let me carry it for you!"</em><br><br>Umar replied with trembling voice:<br><strong>"Will you carry my sins on the Day of Judgment?!"</strong><br><br>Umar walked all the way back to the desert camp, prepared the meal with his own hands, blew into the fire until smoke rose through his beard, and waited until the children ate, laughed, and slept peacefully.`,
+          bn: `অর্ধপৃথিবীর খলিফা হযরত ওমর ইবনুল খাত্তাব (রা.) রাতে প্রজাদের অবস্থা জানার জন্য ছদ্মবেশে মদিনার অলিতে-গলিতে টহল দিতেন।<br><br>এক রাতে তিনি মদিনার উপকণ্ঠে একটি আলো দেখতে পেলেন। কাছে গিয়ে দেখলেন, এক বেদুইন নারী চুলার ওপর পাতিল চাপিয়ে বসে আছে আর তার চারপাশের কচি শিশুরা ক্ষুধায় কাঁদতে কাঁদতে ক্লান্ত হয়ে পড়েছে। পাতিলে কোনো খাবার ছিল না, কেবল ফুটন্ত পানি ও কিছু পাথর; যাতে শিশুরা মনে করে খাবার রান্না হচ্ছে এবং অপেক্ষা করতে করতে ঘুমিয়ে পড়ে।<br><br>ওমর (রা.) জিজ্ঞেস করলেন: <em>"শিশুরা কাঁদছে কেন?"</em> খলিফাকে চিনতে না পেরে নারীটি ক্ষোভ প্রকাশ করে বলল: <em>"ক্ষুধায়! আর আমাদের ও খলিফা ওমরের মধ্যে আল্লাহই শেষ বিচার করবেন!"</em><br><br>ওমর (রা.)-এর চোখ দিয়ে অশ্রু ঝরে পড়ল। তিনি কালবিলম্ব না করে সোজা বাইতুল মালে (সরকারি কোষাগার) ছুটলেন। সেখান থেকে এক বস্তা আটা, ঘি ও খেজুর নিজের পিঠে তুলে নিলেন। তাঁর খাদেম আসলাম বললেন: <em>"হে আমিরুল মুমিনীন! বস্তাটি আমার কাঁধে দিন, আমি বয়ে নিয়ে যাই।"</em><br><br>ওমর (রা.) কেঁপে উঠে বললেন:<br><strong>"কেয়ামতের দিন কি তুমি আমার গুনাহের বোঝা নিজের কাঁধে বহন করবে?!"</strong><br><br>ওমর (রা.) নিজে সেই ভারী বস্তা বহন করে মরুভূমির তাঁবুতে ফিরে এলেন। নিজের হাতে রুটি তৈরি করে হাঁড়িতে হালুয়া রান্না করলেন এবং ফুঁ দিয়ে আগুন জ্বালালেন। তিনি ততক্ষণ অপেক্ষা করলেন যতক্ষণ না ক্ষুধার্ত শিশুরা তৃপ্তিভরে খেয়ে হাসিমুখে ঘুমিয়ে পড়ল।`
+        }
+      }
+    ];
+
+    function renderStoriesList() {
+      const container = document.getElementById("stories-list-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      STORIES_DATA.forEach(s => {
+        const item = document.createElement("div");
+        item.className = "story-card";
+        item.onclick = () => openStoryModal(s.id);
+
+        const cat = s.cat[currentLang] || s.cat.en;
+        const title = s.title[currentLang] || s.title.en;
+        const sub = s.subtitle[currentLang] || s.subtitle.en;
+        const lesson = s.lesson[currentLang] || s.lesson.en;
+
+        item.innerHTML = `
+          <div class="story-top-row">
+            <div class="story-icon-wrap">${s.icon}</div>
+            <div class="story-meta">
+              <span class="story-cat-badge">${cat}</span>
+              <div class="story-headline">${title}</div>
+            </div>
+          </div>
+          <div class="story-preview">${sub}</div>
+          <div class="story-lesson-chip">
+            <strong>💡 ${STRINGS[currentLang].moralLesson}:</strong> ${lesson}
+          </div>
+          <div class="story-read-btn">
+            <span>${STRINGS[currentLang].readStory}</span>
+            <span>→</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openStoryModal(storyId) {
+      const story = STORIES_DATA.find(s => s.id === storyId);
+      if (!story) return;
+
+      const title = story.title[currentLang] || story.title.en;
+      const body = story.fullStory[currentLang] || story.fullStory.en;
+      const lesson = story.lesson[currentLang] || story.lesson.en;
+
+      document.getElementById("story-sheet-title").textContent = title;
+      document.getElementById("story-sheet-body").innerHTML = `
+        <div class="story-lesson-box">
+          <strong>💡 ${STRINGS[currentLang].moralLesson}:</strong> ${lesson}
+        </div>
+        <div style="font-size: 0.95rem; line-height: 1.75; color: #E2E8F0;">
+          ${body}
+        </div>
+        <div style="margin-top: 24px; text-align: center;">
+          <button class="btn-primary" style="margin: 0 auto;" onclick="shareStory('${storyId}')">
+            <span>↗️</span> <span>Share Wisdom / শেয়ার করুন</span>
+          </button>
+        </div>
+      `;
+
+      document.getElementById("story-reader-modal").classList.add("active");
+      triggerVibration(25);
+    }
+
+    function closeStoryModal() {
+      document.getElementById("story-reader-modal").classList.remove("active");
+      triggerVibration(15);
+    }
+
+    function shareStory(storyId) {
+      const story = STORIES_DATA.find(s => s.id === storyId);
+      if (!story) return;
+      const title = story.title[currentLang] || story.title.en;
+      const lesson = story.lesson[currentLang] || story.lesson.en;
+      const text = `📖 ${title}\n\n💡 ${STRINGS[currentLang].moralLesson}: ${lesson}\n\n— Namaz Reminder (নামাজ রিমাইন্ডার)`;
+      if (navigator.share) {
+        navigator.share({ title: title, text: text }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(currentLang === "bn" ? "কাহিনী কপি হয়েছে! 📋" : "Story copied to clipboard! 📋");
+        });
+      }
+    }
+
+    /* ================= BILINGUAL QUOTES DATABASE ================= */
+    const QUOTES_DATA = [
+      {
+        en: { text: "Verily, with hardship comes ease. With hardship comes ease.", author: "Surah Ash-Sharh (94:5-6)", cat: "hope" },
+        bn: { text: "নিশ্চয় কষ্টের সাথেই রয়েছে স্বস্তি। নিশ্চয় কষ্টের সাথেই রয়েছে স্বস্তি।", author: "সূরা আল-ইনশিরাহ (৯৪:৫-৬)", cat: "hope" }
+      },
+      {
+        en: { text: "Do not lose hope, nor be sad. You will surely be victorious if you are true in faith.", author: "Surah Ali 'Imran (3:139)", cat: "hope" },
+        bn: { text: "তোমরা নিরাশ হয়ো না এবং দুঃখ করো না। তোমরাই বিজয়ী হবে যদি তোমরা মুমিন হও।", author: "সূরা আলে ইমরান (৩:১৩৯)", cat: "hope" }
+      },
+      {
+        en: { text: "The most beloved deed to Allah is the most regular and constant even if it were little.", author: "Prophet Muhammad ﷺ (Sahih Bukhari)", cat: "discipline" },
+        bn: { text: "আল্লাহর নিকট সর্বাধিক প্রিয় আমল হলো যা নিয়মিত করা হয়, যদিও তা অল্প হয়।", author: "রাসুলুল্লাহ ﷺ (সহিহ বুখারি)", cat: "discipline" }
+      },
+      {
+        en: { text: "Take advantage of five before five: youth before old age, health before sickness, wealth before poverty, free time before busyness, and life before death.", author: "Prophet Muhammad ﷺ", cat: "discipline" },
+        bn: { text: "পাঁচটি জিনিস আসার আগে পাঁচটি জিনিসকে মূল্যবান মনে করো: বার্ধক্যের আগে যৌবন, অসুস্থতার আগে সুস্থতা, দারিদ্র্যের আগে সচ্ছলতা, ব্যস্ততার আগে অবসর এবং মৃত্যুর আগে জীবন।", author: "রাসুলুল্লাহ ﷺ (মুস্তাদরাক হাকিম)", cat: "discipline" }
+      },
+      {
+        en: { text: "If you are grateful, I will surely increase your favor upon you.", author: "Surah Ibrahim (14:7)", cat: "peace" },
+        bn: { text: "যদি তোমরা কৃতজ্ঞতা স্বীকার করো, তবে আমি অবশ্যই তোমাদের নেয়ামত বৃদ্ধি করে দেব।", author: "সূরা ইব্রাহিম (১৪:৭)", cat: "peace" }
+      },
+      {
+        en: { text: "Patience is not the ability to wait, but the ability to keep a good attitude and trust Allah while waiting.", author: "Spiritual Reflection", cat: "peace" },
+        bn: { text: "ধৈর্য মানে শুধু অপেক্ষা করা নয়, বরং অপেক্ষার সময়ও আল্লাহর ওপর পূর্ণ ভরসা রেখে সুন্দর আচরণ বজায় রাখা।", author: "আধ্যাত্মিক ভাবনা", cat: "peace" }
+      },
+      {
+        en: { text: "And He found you lost and guided you.", author: "Surah Ad-Duha (93:7)", cat: "hope" },
+        bn: { text: "এবং তিনি আপনাকে পথহারা পেয়েছেন, অতঃপর পথ প্রদর্শন করেছেন।", author: "সূরা আদ-দুহা (৯৩:৭)", cat: "hope" }
+      },
+      {
+        en: { text: "Tie your camel first, then put your trust in Allah.", author: "Prophet Muhammad ﷺ (Tirmidhi)", cat: "discipline" },
+        bn: { text: "আগে তোমার উটটি শক্ত করে বাঁধো, তারপর আল্লাহর ওপর ভরসা করো।", author: "রাসুলুল্লাহ ﷺ (তিরমিজি)", cat: "discipline" }
+      },
+      {
+        en: { text: "Speak good or remain silent.", author: "Prophet Muhammad ﷺ (Bukhari & Muslim)", cat: "peace" },
+        bn: { text: "যে ব্যক্তি ভালো কথা বলতে পারে না, তার উচিত চুপ থাকা।", author: "রাসুলুল্লাহ ﷺ (বুখারি ও মুসলিম)", cat: "peace" }
+      },
+      {
+        en: { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Will Durant / Aristotle", cat: "discipline" },
+        bn: { text: "আমরা বারবার যা করি তাই আমাদের পরিচয়। তাই শ্রেষ্ঠত্ব কোনো একক কাজ নয়, এটি একটি নিয়মিত অভ্যাস।", author: "উইল ডুরান্ট", cat: "discipline" }
+      }
+    ];
+
+    let currentQuoteIndex = 0;
+    let favoritesList = JSON.parse(SafeStorage.get("noor_favorites", "[]"));
+
+    /* ================= SINGLE REFLECTION CARD CONTROLS ================= */
+    let currentQuoteFilter = "all";
+    let filteredQuotesList = QUOTES_DATA;
+
+    function getFilteredQuotes() {
+      if (currentQuoteFilter === "all") return QUOTES_DATA;
+      if (currentQuoteFilter === "favorites") {
+        const favs = QUOTES_DATA.filter(item => favoritesList.includes(item[currentLang].text));
+        return favs.length > 0 ? favs : QUOTES_DATA;
+      }
+      return QUOTES_DATA.filter(item => item[currentLang].cat === currentQuoteFilter);
+    }
+
+    function updateQuoteUI() {
+      filteredQuotesList = getFilteredQuotes();
+      if (currentQuoteIndex >= filteredQuotesList.length) currentQuoteIndex = 0;
+      if (currentQuoteIndex < 0) currentQuoteIndex = filteredQuotesList.length - 1;
+
+      const item = filteredQuotesList[currentQuoteIndex];
+      if (!item) return;
+      const q = item[currentLang];
+
+      const catBadge = document.getElementById("spotlight-category");
+      if (catBadge) {
+        const catMap = {
+          hope: currentLang === "bn" ? "আশা ও ধৈর্য" : "Hope & Sabr",
+          discipline: currentLang === "bn" ? "আমল ও শৃঙ্খলা" : "Discipline & Deeds",
+          peace: currentLang === "bn" ? "ঈমান ও প্রশান্তি" : "Faith & Peace"
+        };
+        catBadge.textContent = catMap[q.cat] || "Wisdom";
+      }
+
+      const txt = document.getElementById("spotlight-text");
+      if (txt) {
+        txt.style.opacity = "0";
+        setTimeout(() => {
+          txt.textContent = q.text;
+          txt.style.opacity = "1";
+        }, 150);
+      }
+
+      const auth = document.getElementById("spotlight-author");
+      if (auth) auth.textContent = `— ${q.author}`;
+
+      const counterBadge = document.getElementById("quote-counter-badge");
+      if (counterBadge) {
+        const cur = currentLang === "bn" ? (currentQuoteIndex + 1).toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : (currentQuoteIndex + 1);
+        const total = currentLang === "bn" ? filteredQuotesList.length.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : filteredQuotesList.length;
+        counterBadge.textContent = `${cur} / ${total}`;
+      }
+
+      const favBtn = document.getElementById("btn-favorite");
+      if (favBtn) {
+        favBtn.style.color = favoritesList.includes(q.text) ? "#F59E0B" : "inherit";
+      }
+    }
+
+    function nextQuote() {
+      currentQuoteIndex = (currentQuoteIndex + 1) % filteredQuotesList.length;
+      updateQuoteUI();
+      triggerVibration(20);
+    }
+
+    function prevQuote() {
+      currentQuoteIndex = (currentQuoteIndex - 1 + filteredQuotesList.length) % filteredQuotesList.length;
+      updateQuoteUI();
+      triggerVibration(20);
+    }
+
+    function randomQuote() {
+      currentQuoteIndex = Math.floor(Math.random() * filteredQuotesList.length);
+      updateQuoteUI();
+      triggerVibration(25);
+    }
+
+    function filterQuotes(cat, chip) {
+      document.querySelectorAll(".filter-chips .chip").forEach(c => c.classList.remove("active"));
+      if (chip) chip.classList.add("active");
+      currentQuoteFilter = cat;
+      currentQuoteIndex = 0;
+      updateQuoteUI();
+      triggerVibration(20);
+    }
+
+    /* ================= STREAK & LIFETIME BEADS TRACKER ================= */
+    let streakDays = parseInt(SafeStorage.getItem("sakinah_streak_days") || "1");
+    let lifetimeBeads = parseInt(SafeStorage.getItem("sakinah_lifetime_beads") || "0");
+    let todayBeads = parseInt(SafeStorage.getItem("sakinah_today_beads") || "0");
+    let lastActiveDate = SafeStorage.getItem("sakinah_last_active_date") || "";
+
+    function initStreakAndAnalytics() {
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (lastActiveDate !== todayStr) {
+        if (lastActiveDate) {
+          const last = new Date(lastActiveDate);
+          const curr = new Date(todayStr);
+          const diffDays = Math.round((curr - last) / (1000 * 60 * 60 * 24));
+          if (diffDays === 1) {
+            streakDays += 1;
+          } else if (diffDays > 1) {
+            streakDays = 1;
+          }
+        } else {
+          streakDays = 1;
+        }
+        todayBeads = 0;
+        SafeStorage.setItem("sakinah_today_beads", "0");
+        SafeStorage.setItem("sakinah_streak_days", streakDays.toString());
+        SafeStorage.setItem("sakinah_last_active_date", todayStr);
+      }
+      updateStreakUI();
+    }
+
+    function updateStreakUI() {
+      const bnDigits = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+      const dispStreak = currentLang === "bn" ? bnDigits(streakDays) : streakDays;
+      const dispToday = currentLang === "bn" ? bnDigits(todayBeads) : todayBeads;
+      const dispLife = currentLang === "bn" ? bnDigits(lifetimeBeads) : lifetimeBeads;
+
+      const streakDaysEl = document.getElementById("streak-days-text");
+      if (streakDaysEl) {
+        streakDaysEl.textContent = currentLang === "bn" ? `${dispStreak} ${STRINGS.bn.streakDays}` : `${dispStreak} ${STRINGS.en.streakDays}`;
+      }
+
+      const rankBadge = document.getElementById("streak-rank-badge");
+      if (rankBadge) {
+        if (streakDays >= 30) {
+          rankBadge.textContent = currentLang === "bn" ? "👑 জিকিরের ধারক (Master Believer)" : "👑 Master of Dhikr";
+        } else if (streakDays >= 7) {
+          rankBadge.textContent = currentLang === "bn" ? "🌟 অবিচল মুমিন (Dedicated)" : "🌟 Dedicated Believer";
+        } else if (streakDays >= 3) {
+          rankBadge.textContent = currentLang === "bn" ? "⚡ একনিষ্ঠ সাধক (Steadfast)" : "⚡ Steadfast Believer";
+        } else {
+          rankBadge.textContent = currentLang === "bn" ? "🌱 পবিত্র সূচনা (Steadfast Journey)" : "🌱 Steadfast Believer";
+        }
+      }
+
+      if (document.getElementById("stat-today-beads")) document.getElementById("stat-today-beads").textContent = dispToday;
+      if (document.getElementById("stat-total-beads")) document.getElementById("stat-total-beads").textContent = dispLife;
+
+      // Update prayers checked
+      const savedTracker = JSON.parse(SafeStorage.getItem(getTodayKey()) || "{}");
+      const doneCount = ["fajr", "dhuhr", "asr", "maghrib", "isha"].filter(k => savedTracker[k]).length;
+      if (document.getElementById("stat-today-prayers")) {
+        document.getElementById("stat-today-prayers").textContent = currentLang === "bn" ? `${bnDigits(doneCount)}/৫` : `${doneCount}/5`;
+      }
+    }
+
+    function updateProgressRing(count, target) {
+      const ring = document.getElementById("tasbih-progress-ring");
+      if (!ring) return;
+      const circumference = 2 * Math.PI * 95; // ~597
+      if (target <= 0) {
+        ring.style.strokeDashoffset = "0";
+        return;
+      }
+      const progress = Math.min(count % target, target) / target;
+      const offset = circumference - progress * circumference;
+      ring.style.strokeDashoffset = offset;
+    }
+
+    /* ================= ASTRONOMICAL CALCULATION ================= */
+    const CITIES = {
+      dhaka: { name: "Dhaka", bn: "ঢাকা", lat: 23.8103, lng: 90.4125, tz: 6 },
+      chittagong: { name: "Chittagong", bn: "চট্টগ্রাম", lat: 22.3569, lng: 91.7832, tz: 6 },
+      sylhet: { name: "Sylhet", bn: "সিলেট", lat: 24.8949, lng: 91.8687, tz: 6 },
+      rajshahi: { name: "Rajshahi", bn: "রাজশাহী", lat: 24.3745, lng: 88.6042, tz: 6 },
+      khulna: { name: "Khulna", bn: "খুলনা", lat: 22.8456, lng: 89.5403, tz: 6 },
+      london: { name: "London", bn: "লন্ডন", lat: 51.5074, lng: -0.1278, tz: 0 },
+      newyork: { name: "New York", bn: "নিউ ইয়র্ক", lat: 40.7128, lng: -74.0060, tz: -5 },
+      riyadh: { name: "Riyadh", bn: "রিয়াদ", lat: 24.7136, lng: 46.6753, tz: 3 },
+      dubai: { name: "Dubai", bn: "দুবাই", lat: 25.2048, lng: 55.2708, tz: 4 },
+      kualalumpur: { name: "Kuala Lumpur", bn: "কুয়ালালামপুর", lat: 3.1390, lng: 101.6869, tz: 8 }
+    };
+
+    let userConfig = {
+      cityKey: SafeStorage.get("noor_city", "dhaka") || "dhaka",
+      lat: parseFloat(SafeStorage.get("noor_lat", "23.8103")) || 23.8103,
+      lng: parseFloat(SafeStorage.get("noor_lng", "90.4125")) || 90.4125,
+      tz: parseFloat(SafeStorage.get("noor_tz", "6")) || 6,
+      cityName: SafeStorage.get("noor_city_name", "Dhaka") || "Dhaka",
+      isHanafi: SafeStorage.get("noor_hanafi", "1") !== null ? parseInt(SafeStorage.get("noor_hanafi", "1")) : 1,
+      method: SafeStorage.get("noor_method", "karachi") || "karachi"
+    };
+
+    const METHODS = {
+      karachi: { fajrAngle: 18, ishaAngle: 18 },
+      mwl: { fajrAngle: 18, ishaAngle: 17 },
+      isna: { fajrAngle: 15, ishaAngle: 15 },
+      makkah: { fajrAngle: 18.5, ishaMinutes: 90 },
+      egypt: { fajrAngle: 19.5, ishaAngle: 17.5 }
+    };
+
+    function toRadians(d) { return d * Math.PI / 180.0; }
+    function toDegrees(r) { return r * 180.0 / Math.PI; }
+
+    function calculatePrayerTimes(date, lat, lng, tz, isHanafi, methodKey) {
+      const method = METHODS[methodKey] || METHODS.karachi;
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      let a = Math.floor((14 - month) / 12);
+      let y = year + 4800 - a;
+      let m = month + 12 * a - 3;
+      let jd = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+      let d = jd - 2451545.0;
+
+      let g = (357.529 + 0.98560028 * d) % 360;
+      let q = (280.459 + 0.98564736 * d) % 360;
+      let L = (q + 1.915 * Math.sin(toRadians(g)) + 0.020 * Math.sin(toRadians(2 * g))) % 360;
+      let e = 23.439 - 0.00000036 * d;
+      let RA = (toDegrees(Math.atan2(Math.cos(toRadians(e)) * Math.sin(toRadians(L)), Math.cos(toRadians(L)))) / 15.0) % 24.0;
+      let dec = toDegrees(Math.asin(Math.sin(toRadians(e)) * Math.sin(toRadians(L))));
+      let eqt = (q / 15.0) - RA;
+      if (eqt > 12) eqt -= 24;
+      if (eqt < -12) eqt += 24;
+
+      let noon = 12.0 + tz - (lng / 15.0) - eqt;
+
+      function timeDiff(angle) {
+        let cosHA = (Math.sin(toRadians(-angle)) - Math.sin(toRadians(lat)) * Math.sin(toRadians(dec))) /
+                    (Math.cos(toRadians(lat)) * Math.cos(toRadians(dec)));
+        if (cosHA > 1 || cosHA < -1) return 0;
+        return toDegrees(Math.acos(cosHA)) / 15.0;
+      }
+
+      function asrTimeDiff(factor) {
+        let alt = toDegrees(Math.atan(1.0 / (factor + Math.tan(toRadians(Math.abs(lat - dec))))));
+        let cosHA = (Math.sin(toRadians(alt)) - Math.sin(toRadians(lat)) * Math.sin(toRadians(dec))) /
+                    (Math.cos(toRadians(lat)) * Math.cos(toRadians(dec)));
+        if (cosHA > 1 || cosHA < -1) return 0;
+        return toDegrees(Math.acos(cosHA)) / 15.0;
+      }
+
+      let sunriseDiff = timeDiff(0.833);
+      let fajrDiff = timeDiff(method.fajrAngle);
+      let asrDiff = asrTimeDiff(isHanafi === 1 ? 2.0 : 1.0);
+      let ishaDiff = method.ishaAngle ? timeDiff(method.ishaAngle) : null;
+
+      let fajr = noon - fajrDiff;
+      let sunrise = noon - sunriseDiff;
+      let dhuhr = noon;
+      let asr = noon + asrDiff;
+      let maghrib = noon + sunriseDiff;
+      let isha = ishaDiff ? (noon + ishaDiff) : (maghrib + (method.ishaMinutes || 90) / 60.0);
+
+      return { fajr, sunrise, dhuhr, asr, maghrib, isha };
+    }
+
+    function formatTime(decHours) {
+      if (isNaN(decHours)) return "--:--";
+      let totalMinutes = Math.round(decHours * 60);
+      let h = Math.floor(totalMinutes / 60) % 24;
+      let m = totalMinutes % 60;
+      let period = h >= 12 ? (currentLang === "bn" ? "দুপুর/বিকাল" : "PM") : (currentLang === "bn" ? "ভোর/সকাল" : "AM");
+      let displayH = h % 12;
+      if (displayH === 0) displayH = 12;
+      let displayM = m < 10 ? "0" + m : m;
+
+      if (currentLang === "bn") {
+        const toBnDigits = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+        return `${toBnDigits(displayH)}:${toBnDigits(displayM)} ${period}`;
+      }
+      return `${displayH}:${displayM} ${period}`;
+    }
+
+    function getPrayerDate(today, decHours) {
+      let totalMinutes = Math.round(decHours * 60);
+      let h = Math.floor(totalMinutes / 60) % 24;
+      let m = totalMinutes % 60;
+      let d = new Date(today);
+      d.setHours(h, m, 0, 0);
+      return d;
+    }
+
+    function calculateQibla(lat, lng) {
+      const mLat = toRadians(21.4225);
+      const mLng = toRadians(39.8262);
+      const uLat = toRadians(lat);
+      const uLng = toRadians(lng);
+      const y = Math.sin(mLng - uLng);
+      const x = Math.cos(uLat) * Math.tan(mLat) - Math.sin(uLat) * Math.cos(mLng - uLng);
+      let q = toDegrees(Math.atan2(y, x));
+      return Math.round((q + 360) % 360);
+    }
+
+    
+
+
+
+    /* ================= COMPREHENSIVE TAZBIH GUIDE DATABASE ================= */
+    const TAZBIH_GUIDE = [
+      {
+        arabic: "سُبْحَانَ اللَّهِ",
+        en: {
+          trans: "SubhanAllah",
+          meaning: "Glory be to Allah (Free from any imperfection)",
+          virtue: "Reciting 100 times writes 1,000 good deeds & erases 1,000 sins (Sahih Muslim)."
+        },
+        bn: {
+          trans: "সুবহানাল্লাহ",
+          meaning: "আল্লাহ মহাপবিত্র ও যাবতীয় ত্রুটিমুক্ত",
+          virtue: "প্রতিদিন ১০০ বার পাঠ করলে ১০০০ নেকি লেখা হয় এবং ১০০০ গুনাহ মাফ করা হয় (সহিহ মুসলিম)।"
+        }
+      },
+      {
+        arabic: "الْحَمْدُ لِلَّهِ",
+        en: {
+          trans: "Alhamdulillah",
+          meaning: "All praise and gratitude belong to Allah",
+          virtue: "Fills the Scale of Good Deeds (Mizan) on the Day of Judgment (Sahih Muslim)."
+        },
+        bn: {
+          trans: "আলহামদুলিল্লাহ",
+          meaning: "যাবতীয় প্রশংসা একমাত্র মহান আল্লাহর জন্য",
+          virtue: "আলহামদুলিল্লাহ মিজানের পাল্লাকে নেকি দিয়ে পূর্ণ করে দেয় (সহিহ মুসলিম)।"
+        }
+      },
+      {
+        arabic: "اللَّهُ أَكْبَرُ",
+        en: {
+          trans: "Allahu Akbar",
+          meaning: "Allah is Greater than everything",
+          virtue: "Fills the space between the heavens and the earth with reward."
+        },
+        bn: {
+          trans: "আল্লাহু আকবার",
+          meaning: "আল্লাহ সর্বশ্রেষ্ঠ ও মহান",
+          virtue: "আসমান ও জমিনের মধ্যবর্তী শূন্যস্থানকে সওয়াব দিয়ে পূর্ণ করে।"
+        }
+      },
+      {
+        arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+        en: {
+          trans: "Astaghfirullah wa atubu ilayh",
+          meaning: "I seek forgiveness from Allah and repent to Him",
+          virtue: "Removes anxiety, opens doors of sustenance, and brings peace (Abu Dawud)."
+        },
+        bn: {
+          trans: "আস্তাগফিরুল্লাহ ওয়া আতুবু ইলাইহি",
+          meaning: "আমি আল্লাহর কাছে ক্ষমা চাই এবং তাঁর দিকেই ফিরে আসি",
+          virtue: "যে ব্যক্তি নিয়মিত ইস্তিগফার করে, আল্লাহ তাকে সকল দুশ্চিন্তা ও সংকট থেকে মুক্তির পথ দেখান (আবু দাউদ)।"
+        }
+      },
+      {
+        arabic: "لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+        en: {
+          trans: "La ilaha illallah wahdahu la sharika lah",
+          meaning: "None has the right to be worshipped except Allah alone without partner",
+          virtue: "The best dhikr and heaviest phrase on the Scale (Tirmidhi)."
+        },
+        bn: {
+          trans: "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু",
+          meaning: "একমাত্র আল্লাহ ছাড়া কোনো সত্য উপাস্য নেই, তিনি একক, তাঁর কোনো শরিক নেই",
+          virtue: "শ্রেষ্ঠ জিকির হলো 'লা ইলাহা ইল্লাল্লাহ' (তিরমিজি)।"
+        }
+      },
+      {
+        arabic: "اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
+        en: {
+          trans: "Allahumma salli 'ala Muhammad wa 'ala ali Muhammad",
+          meaning: "O Allah, send peace and blessings upon Muhammad and his family",
+          virtue: "Whoever sends one blessing upon the Prophet, Allah sends ten upon them (Nasa'i)."
+        },
+        bn: {
+          trans: "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিওঁ ওয়া আলা আলি মুহাম্মদ",
+          meaning: "হে আল্লাহ! মুহাম্মদ (সা.) এবং তাঁর পরিবারের প্রতি শান্তি ও রহমত বর্ষণ করুন",
+          virtue: "যে ব্যক্তি একবার দরুদ পাঠ করে, আল্লাহ তার ওপর দশটি রহমত নাজিল করেন ও দশটি মর্যাদা বৃদ্ধি করেন (নাসাঈ)।"
+        }
+      },
+      {
+        arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ",
+        en: {
+          trans: "SubhanAllahi wa bihamdihi, SubhanAllahil 'Adheem",
+          meaning: "Glory be to Allah and His praise; Glory be to Allah the Supreme",
+          virtue: "Two phrases beloved to the Most Merciful, light on tongue, heavy on scale (Bukhari)."
+        },
+        bn: {
+          trans: "সুবহানাল্লাহি ওয়া বিহামদিহি, সুবহানাল্লাহিল আজিম",
+          meaning: "আল্লাহর প্রশংসাসহ পবিত্রতা ঘোষণা করছি, মহান আল্লাহ পরম পবিত্র",
+          virtue: "উচ্চারণে হালকা কিন্তু মিজানের পাল্লায় অনেক ভারী ও পরম করুণাময়ের কাছে অত্যন্ত প্রিয় দুটি বাক্য (বুখারি)।"
+        }
+      }
+    ];
+
+    let dhikrIndex = 0;
+    let tasbihCount = parseInt(SafeStorage.getItem("noor_tasbih_count") || "0");
+    let tasbihTarget = parseInt(SafeStorage.getItem("noor_tasbih_target") || "33");
+    let soundEnabled = true;
+
+    
+    /* ================= LOCAL MOSQUE AZAN SCHEDULE STATE ================= */
+    let mosqueSchedule = {
+      enabled: SafeStorage.get("noor_mosque_enabled", "true") !== "false", // default: true
+      dhuhr: SafeStorage.get("noor_mosque_dhuhr", "13:00") || "13:00",     // 1:00 PM standard BD
+      fajr: SafeStorage.get("noor_mosque_fajr", "05:00") || "05:00",       // 5:00 AM standard BD
+      asr: SafeStorage.get("noor_mosque_asr", "16:15") || "16:15",         // 4:15 PM standard BD
+      isha: SafeStorage.get("noor_mosque_isha", "19:45") || "19:45"        // 7:45 PM standard BD
+    };
+
+    function parseTimeToDec(timeStr) {
+      if (!timeStr) return 0;
+      const parts = timeStr.split(":");
+      return parseInt(parts[0], 10) + parseInt(parts[1], 10) / 60.0;
+    }
+
+    function openTimingModal() {
+      if (document.getElementById("quick-dhuhr")) document.getElementById("quick-dhuhr").value = mosqueSchedule.dhuhr;
+      if (document.getElementById("quick-fajr")) document.getElementById("quick-fajr").value = mosqueSchedule.fajr;
+      if (document.getElementById("quick-asr")) document.getElementById("quick-asr").value = mosqueSchedule.asr;
+      if (document.getElementById("quick-isha")) document.getElementById("quick-isha").value = mosqueSchedule.isha;
+      document.getElementById("timing-adjust-modal").classList.add("active");
+      triggerVibration(25);
+    }
+
+    function closeTimingModal() {
+      document.getElementById("timing-adjust-modal").classList.remove("active");
+      updatePrayerSchedule();
+      scheduleNativeBackgroundAlarms();
+      showToast(currentLang === "bn" ? "মসজিদের আযানের সময় হালনাগাদ হয়েছে! 🕌" : "Mosque Azan timings updated! 🕌");
+      triggerVibration(30);
+    }
+
+    function toggleMosqueAzanMode(val) {
+      mosqueSchedule.enabled = (val === "mosque");
+      SafeStorage.setItem("noor_mosque_enabled", mosqueSchedule.enabled ? "true" : "false");
+      updatePrayerSchedule();
+      scheduleNativeBackgroundAlarms();
+      showToast(mosqueSchedule.enabled ? 
+        (currentLang === "bn" ? "মসজিদের আযানের সময় মোড সক্রিয় (যোহর ১:০০)" : "Mosque Azan Schedule active (Dhuhr 1:00 PM)") : 
+        (currentLang === "bn" ? "সৌর ওয়াক্ত শুরু মোড সক্রিয়" : "Astronomical Waqt mode active")
+      );
+    }
+
+    function setCustomAzanTime(prayerKey, timeStr) {
+      mosqueSchedule[prayerKey] = timeStr;
+      SafeStorage.setItem("noor_mosque_" + prayerKey, timeStr);
+      if (document.getElementById("select-" + prayerKey + "-time")) {
+        document.getElementById("select-" + prayerKey + "-time").value = timeStr;
+      }
+      if (document.getElementById("quick-" + prayerKey)) {
+        document.getElementById("quick-" + prayerKey).value = timeStr;
+      }
+      updatePrayerSchedule();
+      scheduleNativeBackgroundAlarms();
+      showToast(currentLang === "bn" ? "আযান সময় হালনাগাদ: " + timeStr : prayerKey.toUpperCase() + " Azan set to " + timeStr);
+    }
+
+    /* ================= REAL AZAN AUDIO & NOTIFICATIONS ================= */
+    let isAzanCurrentlyPlaying = false;
+
+    function playRealAzanAudio(prayerName, prayerTimeStr) {
+      isAzanCurrentlyPlaying = true;
+      triggerVibration(600);
+
+      // Automatically pause ambient vibe when Azan starts!
+      
+      // 1. Play in-app HTML5 Audio tag (azan.mp3)
+      const audio = document.getElementById("azan-audio-player");
+      if (audio) {
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.log("Audio autoplay note:", err);
+          });
+        }
+        audio.onended = () => {
+          stopActiveAzan(true);
+        };
+      }
+
+      // 2. Play Android native MediaPlayer with R.raw.azan & ongoing notification
+      if (window.AndroidApp && typeof window.AndroidApp.playAzanNow === "function") {
+        window.AndroidApp.playAzanNow(prayerName, prayerTimeStr);
+      }
+
+      // 3. Show active Azan Floating UI Bar with Stop button
+      const bar = document.getElementById("azan-active-bar");
+      if (bar) {
+        document.getElementById("azan-active-title").textContent = currentLang === "bn" ? "🕌 " + prayerName + " আযান বাজছে" : "🕌 " + prayerName + " Azan Playing";
+        document.getElementById("azan-active-sub").textContent = currentLang === "bn" ? "আল্লাহু আকবার, আল্লাহু আকবার..." : "Allahu Akbar, Allahu Akbar...";
+        bar.classList.add("active");
+      }
+    }
+
+    function stopActiveAzan(silent = false) {
+      isAzanCurrentlyPlaying = false;
+      const audio = document.getElementById("azan-audio-player");
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      if (window.AndroidApp && typeof window.AndroidApp.stopAzanNow === "function") {
+        window.AndroidApp.stopAzanNow();
+      }
+      const bar = document.getElementById("azan-active-bar");
+      if (bar) {
+        bar.classList.remove("active");
+      }
+      if (!silent) {
+        triggerVibration(25);
+        showToast(currentLang === "bn" ? "আযান থামানো হয়েছে" : "Azan silenced");
+      }
+      if (ambientUserEnabled) {
+              }
+    }
+
+    /* Melodic Azan Chime Synthesizer with Single Reusable AudioContext (Zero-Leak) */
+    let sharedAudioCtx = null;
+    function playChime(freq = 587.33, type = "sine", duration = 0.35) {
+      try {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioClass) return;
+        if (!sharedAudioCtx) sharedAudioCtx = new AudioClass();
+        if (sharedAudioCtx.state === "suspended") sharedAudioCtx.resume();
+        const osc = sharedAudioCtx.createOscillator();
+        const gain = sharedAudioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, sharedAudioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, sharedAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, sharedAudioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(sharedAudioCtx.destination);
+        osc.start();
+        osc.stop(sharedAudioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playMelodicAzanChime() {
+      // Spiritual pentatonic chords simulating serene call to prayer tones
+      const notes = [392, 440, 523.25, 587.33, 659.25, 783.99];
+      notes.forEach((freq, i) => {
+        setTimeout(() => playChime(freq, "triangle", 0.7), i * 360);
+      });
+    }
+
+    function triggerVibration(ms = 35) {
+      if (window.AndroidApp && typeof window.AndroidApp.vibrate === "function") {
+        window.AndroidApp.vibrate(ms);
+      } else if (navigator.vibrate) {
+        navigator.vibrate(ms);
+      }
+    }
+
+    function showToast(msg) {
+      if (window.AndroidApp && typeof window.AndroidApp.showToast === "function") {
+        window.AndroidApp.showToast(msg);
+      } else {
+        const d = document.createElement("div");
+        d.textContent = msg;
+        d.style.cssText = "position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#10B981;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.4);";
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 2000);
+      }
+    }
+
+    function sendSystemNotification(title, message) {
+      if (window.AndroidApp && typeof window.AndroidApp.sendNotification === "function") {
+        window.AndroidApp.sendNotification(title, message);
+      }
+    }
+
+    function testAzanNotification() {
+      const dhuhrName = currentLang === "bn" ? "যোহর" : "Dhuhr";
+      const dhuhrTime = formatTime(mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.dhuhr) : 13.0);
+      playRealAzanAudio(dhuhrName, dhuhrTime);
+      showToast(currentLang === "bn" ? "আযান বাজছে! 🕌 থামাতে 'আযান থামান' চাপুন" : "Playing Azan! 🕌 Tap Stop Azan to silence");
+    }
+
+        function setText(id, text) {
+      if (!text) return;
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    /* ================= LANGUAGE & UI SWITCHER ================= */
+    function applyLanguageStrings() {
+      const s = STRINGS[currentLang] || STRINGS.en;
+      setText("app-heading", s.appHeading);
+      setText("lbl-next-prayer", s.nextPrayer);
+      setText("lbl-tracker-title", s.trackerTitle);
+      setText("lbl-schedule-title", s.scheduleTitle);
+      setText("lbl-schedule-subtitle", s.scheduleSubtitle);
+      setText("lbl-test-azan", s.testAzan);
+      setText("lbl-next-quote", s.nextQuote);
+      setText("lbl-next-quote-btn", s.nextQuoteBtn);
+      setText("lbl-prev-quote", s.prevQuote);
+      setText("lbl-free-count", s.freeCount);
+      setText("lbl-guide-title", s.guideTitle);
+      setText("lbl-set-lang-title", s.setLangTitle);
+      setText("lbl-app-lang", s.appLang);
+      setText("lbl-app-lang-desc", s.appLangDesc);
+      setText("lbl-set-loc-title", s.setLocTitle);
+      setText("lbl-preset-city", s.presetCity);
+      setText("lbl-preset-city-desc", s.presetCityDesc);
+      setText("lbl-gps-loc", s.gpsLoc);
+      setText("lbl-gps-loc-desc", s.gpsLocDesc);
+      setText("lbl-set-calc-title", s.setCalcTitle);
+      setText("lbl-asr-madhhab", s.asrMadhhab);
+      setText("lbl-asr-desc", s.asrDesc);
+      setText("lbl-calc-method", s.calcMethod);
+      setText("lbl-calc-method-desc", s.calcMethodDesc);
+      setText("lbl-bg-title", s.bgTitle);
+      setText("lbl-test-notif", s.testNotif);
+      setText("lbl-test-notif-desc", s.testNotifDesc);
+      setText("lbl-about-title", s.aboutTitle);
+
+      setText("nav-lbl-prayer", s.navPrayer);
+      setText("nav-lbl-quotes", s.navQuotes);
+      setText("nav-lbl-tasbih", s.navTasbih);
+      setText("nav-lbl-settings", s.navSettings);
+
+      setText("pill-fajr", s.fajr);
+      setText("pill-dhuhr", s.dhuhr);
+      setText("pill-asr", s.asr);
+      setText("pill-maghrib", s.maghrib);
+      setText("pill-isha", s.isha);
+
+      setText("lang-btn", currentLang === "en" ? "বাংলা" : "English");
+      if (document.getElementById("select-lang")) document.getElementById("select-lang").value = currentLang;
+
+      // Update City label
+      const city = CITIES[userConfig.cityKey];
+      if (city) {
+        setText("header-city-name", currentLang === "bn" ? city.bn : city.name);
+      }
+
+      updatePrayerSchedule();
+      loadTracker();
+      updateQuoteUI();
+      updateTasbihUI();
+      renderTazbihGuide();
+      renderStoriesList();
+      updateStreakUI();
+
+      document.querySelectorAll(".lbl-creator-pre").forEach(el => {
+        el.textContent = s.creatorPre;
+      });
+      document.querySelectorAll(".lbl-creator-dua").forEach(el => {
+        el.textContent = s.creatorDua;
+      });
+      setText("lbl-stories-title", s.storiesTitle);
+      setText("lbl-stories-sub", s.storiesSub);
+      setText("lbl-today-beads", s.todayBeads);
+      setText("lbl-total-beads", s.lifetimeBeads);
+      setText("lbl-today-prayers", s.prayersDone);
+
+      setText("lbl-stop-azan", s.stopAzan || "Stop Azan");
+      setText("lbl-save-close", s.lblSaveClose || "Save & Apply");
+      setText("lbl-adjust-modal-title", s.adjustTitle || "Mosque Azan Schedule");
+      setText("lbl-adjust-modal-sub", s.adjustSub || "Set Azan times to match your local neighborhood mosque:");
+      if (document.getElementById("select-azan-mode")) document.getElementById("select-azan-mode").value = mosqueSchedule.enabled ? "mosque" : "astronomical";
+      if (document.getElementById("select-dhuhr-time")) document.getElementById("select-dhuhr-time").value = mosqueSchedule.dhuhr;
+      if (document.getElementById("select-fajr-time")) document.getElementById("select-fajr-time").value = mosqueSchedule.fajr;
+      if (document.getElementById("select-asr-time")) document.getElementById("select-asr-time").value = mosqueSchedule.asr;
+      if (document.getElementById("select-isha-time")) document.getElementById("select-isha-time").value = mosqueSchedule.isha;
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "bn" : "en";
+      SafeStorage.setItem("noor_lang", currentLang);
+      applyLanguageStrings();
+      triggerVibration(25);
+      showToast(currentLang === "bn" ? "ভাষা পরিবর্তন: বাংলা" : "Language: English");
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      SafeStorage.setItem("noor_lang", currentLang);
+      applyLanguageStrings();
+      triggerVibration(25);
+    }
+
+    function chooseFirstLanguage(lang) {
+      currentLang = lang;
+      SafeStorage.setItem("noor_lang", currentLang);
+      document.getElementById("first-time-modal").classList.remove("active");
+      applyLanguageStrings();
+      triggerVibration(40);
+      playChime(659.25, "sine", 0.3);
+    }
+
+    /* ================= MAIN APP INITIALIZATION ================= */
+    let prayerTimesCache = null;
+    let lastNotifiedPrayer = "";
+
+    function initApp() {
+      // First time user language prompt check
+      if (!SafeStorage.getItem("noor_lang")) {
+        document.getElementById("first-time-modal").classList.add("active");
+      }
+
+      const now = new Date();
+      const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+      document.getElementById("hijri-gregorian-date").textContent = now.toLocaleDateString(currentLang === "bn" ? 'bn-BD' : 'en-US', options);
+
+      const qiblaAngle = calculateQibla(userConfig.lat, userConfig.lng);
+      document.getElementById("qibla-bearing-text").textContent = `${STRINGS[currentLang].qibla}: ${qiblaAngle}°`;
+
+      if (document.getElementById("select-city")) document.getElementById("select-city").value = userConfig.cityKey;
+      if (document.getElementById("select-madhhab")) document.getElementById("select-madhhab").value = userConfig.isHanafi;
+      if (document.getElementById("select-method")) document.getElementById("select-method").value = userConfig.method;
+
+      initStreakAndAnalytics();
+      initNamazStreak();
+      applyLanguageStrings();
+      setInterval(updateCountdownClock, 1000);
+      scheduleNativeBackgroundAlarms();
+      updateProgressRing(tasbihCount, tasbihTarget);
+    }
+
+    function updatePrayerSchedule() {
+      const now = new Date();
+      const s = STRINGS[currentLang];
+      const astro = calculatePrayerTimes(
+        now,
+        userConfig.lat,
+        userConfig.lng,
+        userConfig.tz,
+        userConfig.isHanafi,
+        userConfig.method
+      );
+
+      // Determine Azan times based on Mosque Azan Schedule
+      let azanFajr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.fajr) : astro.fajr;
+      let azanSunrise = astro.sunrise;
+      let azanDhuhr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.dhuhr) : astro.dhuhr; // Default 1:00 PM!
+      let azanAsr = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.asr) : astro.asr;       // Default 4:15 PM!
+      let azanMaghrib = astro.maghrib;                                                             // Sunset!
+      let azanIsha = mosqueSchedule.enabled ? parseTimeToDec(mosqueSchedule.isha) : astro.isha;   // Default 7:45 PM!
+
+      prayerTimesCache = {
+        fajr: azanFajr,
+        sunrise: azanSunrise,
+        dhuhr: azanDhuhr,
+        asr: azanAsr,
+        maghrib: azanMaghrib,
+        isha: azanIsha,
+        astroFajr: astro.fajr,
+        astroDhuhr: astro.dhuhr,
+        astroAsr: astro.asr,
+        astroMaghrib: astro.maghrib,
+        astroIsha: astro.isha
+      };
+
+      const waqtPrefix = currentLang === "bn" ? "ওয়াক্ত: " : "Waqt: ";
+
+      const prayers = [
+        {
+          key: "fajr",
+          name: s.fajr,
+          arabic: "الفجر",
+          time: azanFajr,
+          icon: "🌅",
+          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "আযান" : "Azan") : "",
+          waqtInfo: waqtPrefix + formatTime(astro.fajr) + " - " + formatTime(astro.sunrise)
+        },
+        {
+          key: "sunrise",
+          name: s.sunrise,
+          arabic: "الشروق",
+          time: azanSunrise,
+          icon: "☀️",
+          badge: "",
+          waqtInfo: currentLang === "bn" ? "সূর্যোদয় (নামাজ মাকরূহ)" : "Sunrise (No prayer)"
+        },
+        {
+          key: "dhuhr",
+          name: s.dhuhr,
+          arabic: "الظهر",
+          time: azanDhuhr,
+          icon: "🌞",
+          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "মসজিদের আযান ১:০০" : "Mosque Azan 1:00 PM") : "",
+          waqtInfo: waqtPrefix + formatTime(astro.dhuhr) + " - " + formatTime(astro.asr)
+        },
+        {
+          key: "asr",
+          name: s.asr,
+          arabic: "العصر",
+          time: azanAsr,
+          icon: "🌤️",
+          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "আযান" : "Azan") : "",
+          waqtInfo: waqtPrefix + formatTime(astro.asr) + " - " + formatTime(astro.maghrib)
+        },
+        {
+          key: "maghrib",
+          name: s.maghrib,
+          arabic: "المغرب",
+          time: azanMaghrib,
+          icon: "🌇",
+          badge: currentLang === "bn" ? "সূর্যাস্ত আযান" : "Sunset Azan",
+          waqtInfo: waqtPrefix + formatTime(astro.maghrib) + " - " + formatTime(astro.isha)
+        },
+        {
+          key: "isha",
+          name: s.isha,
+          arabic: "العشاء",
+          time: azanIsha,
+          icon: "🌙",
+          badge: mosqueSchedule.enabled ? (currentLang === "bn" ? "আযান" : "Azan") : "",
+          waqtInfo: waqtPrefix + formatTime(astro.isha) + " - " + formatTime(astro.fajr)
+        }
+      ];
+
+      const container = document.getElementById("prayer-rows-container");
+      container.innerHTML = "";
+
+      prayers.forEach(p => {
+        const row = document.createElement("div");
+        row.className = "prayer-row";
+        row.id = `row-${p.key}`;
+        row.innerHTML = `
+          <div class="prayer-left">
+            <div class="prayer-icon-wrap">${p.icon}</div>
+            <div>
+              <div class="prayer-name">${p.name} ${p.badge ? `<span class="azan-badge">${p.badge}</span>` : ''}</div>
+              <div class="prayer-arabic">${p.arabic}</div>
+            </div>
+          </div>
+          <div class="prayer-right">
+            <div class="prayer-timing-box">
+              <div class="prayer-time">${formatTime(p.time)}</div>
+              <div class="prayer-waqt-sub">${p.waqtInfo}</div>
+            </div>
+            <button class="bell-btn active" onclick="togglePrayerReminder('${p.key}', this)" title="Reminder">🔔</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      // Update timing pill label
+      const dhuhrDisplay = formatTime(azanDhuhr);
+      const pillLabel = document.getElementById("lbl-timing-mode-pill");
+      if (pillLabel) {
+        if (mosqueSchedule.enabled) {
+          pillLabel.textContent = currentLang === "bn" ? `মসজিদের আযানের সময় (যোহর: ${dhuhrDisplay})` : `Mosque Azan Schedule (Dhuhr: ${dhuhrDisplay})`;
+        } else {
+          pillLabel.textContent = currentLang === "bn" ? `সৌর ওয়াক্ত শুরু মোড (যোহর: ${formatTime(astro.dhuhr)})` : `Astronomical Waqt Start (Dhuhr: ${formatTime(astro.dhuhr)})`;
+        }
+      }
+
+      updateCountdownClock();
+    }
+
+    function updateCountdownClock() {
+      if (!prayerTimesCache) return;
+      const now = new Date();
+      const s = STRINGS[currentLang];
+
+      const prayerOrder = [
+        { name: s.fajr, arabic: "الفجر", dec: prayerTimesCache.fajr, key: "fajr" },
+        { name: s.sunrise, arabic: "الشروق", dec: prayerTimesCache.sunrise, key: "sunrise" },
+        { name: s.dhuhr, arabic: "الظهر", dec: prayerTimesCache.dhuhr, key: "dhuhr" },
+        { name: s.asr, arabic: "العصر", dec: prayerTimesCache.asr, key: "asr" },
+        { name: s.maghrib, arabic: "المغرب", dec: prayerTimesCache.maghrib, key: "maghrib" },
+        { name: s.isha, arabic: "العشاء", dec: prayerTimesCache.isha, key: "isha" }
+      ];
+
+      let nextPrayer = null;
+      let nextDate = null;
+      let currentPrayerName = s.isha;
+
+      for (let i = 0; i < prayerOrder.length; i++) {
+        let pDate = getPrayerDate(now, prayerOrder[i].dec);
+        if (now < pDate) {
+          nextPrayer = prayerOrder[i];
+          nextDate = pDate;
+          currentPrayerName = i > 0 ? prayerOrder[i - 1].name : (currentLang === "bn" ? "রাত্রি" : "Night");
+          break;
+        }
+      }
+
+      if (!nextPrayer) {
+        nextPrayer = prayerOrder[0];
+        let tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        nextDate = getPrayerDate(tomorrow, prayerOrder[0].dec);
+        currentPrayerName = s.isha;
+      }
+
+      document.querySelectorAll(".prayer-row").forEach(r => r.classList.remove("current-prayer"));
+      const activeKey = nextPrayer.key;
+      const activeRow = document.getElementById(`row-${activeKey}`);
+      if (activeRow) activeRow.classList.add("current-prayer");
+
+      document.getElementById("next-prayer-name").textContent = nextPrayer.name;
+      document.getElementById("next-prayer-arabic").textContent = nextPrayer.arabic;
+      document.getElementById("current-prayer-status").textContent = `${currentLang === 'bn' ? 'বর্তমান' : 'Current'}: ${currentPrayerName}`;
+
+      let diffMs = nextDate - now;
+      if (diffMs <= 1000 && diffMs >= 0) {
+        const prayerTriggerKey = nextPrayer.key + "_" + now.getDate() + "_" + now.getHours() + "_" + now.getMinutes();
+        if (lastNotifiedPrayer !== prayerTriggerKey) {
+          lastNotifiedPrayer = prayerTriggerKey;
+          playRealAzanAudio(nextPrayer.name, formatTime(nextPrayer.dec));
+        }
+      }
+
+      if (diffMs < 0) diffMs = 0;
+      let hours = Math.floor(diffMs / (1000 * 60 * 60));
+      let mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      let secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+      const pad = n => n < 10 ? "0" + n : n;
+      let timeStr = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+      if (currentLang === "bn") {
+        timeStr = timeStr.replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+      }
+      document.getElementById("next-prayer-countdown").textContent = timeStr;
+    }
+
+    /* Native AlarmManager Background Sync */
+    function scheduleNativeBackgroundAlarms() {
+      if (!window.AndroidApp || typeof window.AndroidApp.schedulePrayerAlarm !== "function" || !prayerTimesCache) return;
+      const now = new Date();
+      const list = [
+        { name: "Fajr", dec: prayerTimesCache.fajr },
+        { name: "Dhuhr", dec: prayerTimesCache.dhuhr },
+        { name: "Asr", dec: prayerTimesCache.asr },
+        { name: "Maghrib", dec: prayerTimesCache.maghrib },
+        { name: "Isha", dec: prayerTimesCache.isha }
+      ];
+
+      list.forEach(p => {
+        let pDate = getPrayerDate(now, p.dec);
+        if (pDate.getTime() > now.getTime()) {
+          window.AndroidApp.schedulePrayerAlarm(p.name, pDate.getTime(), formatTime(p.dec));
+        }
+      });
+
+      // Schedule background quote notification for tomorrow morning (9:00 AM)
+      const q = QUOTES_DATA[Math.floor(Math.random() * QUOTES_DATA.length)][currentLang];
+      let morningQuoteTime = new Date();
+      morningQuoteTime.setHours(9, 0, 0, 0);
+      if (morningQuoteTime.getTime() <= now.getTime()) {
+        morningQuoteTime.setDate(morningQuoteTime.getDate() + 1);
+      }
+      if (typeof window.AndroidApp.scheduleDailyQuote === "function") {
+        window.AndroidApp.scheduleDailyQuote(morningQuoteTime.getTime(), q.text, q.author);
+      }
+    }
+
+    /* ================= TRACKER ================= */
+    function getTodayKey() {
+      const d = new Date();
+      return `noor_checkin_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+    }
+
+    function loadTracker() {
+      const saved = JSON.parse(SafeStorage.getItem(getTodayKey()) || "{}");
+      const list = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+      let count = 0;
+
+      list.forEach(p => {
+        const el = document.getElementById(`chk-${p}`);
+        const pill = el.parentElement;
+        if (saved[p]) {
+          el.textContent = "✅";
+          pill.classList.add("completed");
+          count++;
+        } else {
+          el.textContent = "⚪";
+          pill.classList.remove("completed");
+        }
+      });
+
+      const s = STRINGS[currentLang];
+      const countStr = currentLang === "bn" ? ("০১২৩৪৫"[count] + "/৫ " + s.completed) : `${count}/5 ${s.completed}`;
+      document.getElementById("tracker-score").textContent = countStr;
+    }
+
+
+    /* ================= NAMAZ STREAK & MILESTONE SYSTEM ================= */
+    const NAMAZ_MILESTONES = [
+      { days: 1, icon: "🌱", bn: "তাকওয়ার সূচনা", en: "First Step", descBn: "১ দিন ৫ ওয়াক্ত নামাজ সম্পন্ন", descEn: "1 full day 5/5 prayers completed" },
+      { days: 3, icon: "⚡", bn: "৩ দিনের অবিচল নিষ্ঠা", en: "3-Day Steadfast", descBn: "ধারাবাহিক ৩ দিন ৫ ওয়াক্ত নামাজ", descEn: "3 consecutive days completed" },
+      { days: 7, icon: "🌟", bn: "১ সপ্তাহের নূর", en: "7-Day Light", descBn: "পূর্ণ ১ সপ্তাহ ৫ ওয়াক্ত নামাজের আলো", descEn: "Full 1 week streak completed" },
+      { days: 14, icon: "🛡️", bn: "১৪ দিনের ঈমানী ঢাল", en: "14-Day Taqwa Shield", descBn: "ধারাবাহিক ১৪ দিন অটুট নামাজ", descEn: "2 weeks uninterrupted prayer streak" },
+      { days: 21, icon: "✨", bn: "২১ দিনের বিজয়ী অভ্যাস", en: "21-Day Habit Master", descBn: "২১ দিনে অভ্যাসের চিরস্থায়ী রূপান্তর", descEn: "21 days habit firmly established" },
+      { days: 30, icon: "👑", bn: "৩০ দিনের মুত্তাকী", en: "30-Day Master Believer", descBn: "পূর্ণ ১ মাস একনিষ্ঠ নামাজের নূর", descEn: "Full month uninterrupted devotion" },
+      { days: 40, icon: "🏆", bn: "৪০ দিনের তাকবীরে উলা মুকুট", en: "40-Day Congregation Crown", descBn: "জাহান্নাম ও মুনাফেকি থেকে মুক্তির সুসংবাদ (তিরমিজি ২৪১)", descEn: "Freedom from Fire & Hypocrisy (Tirmidhi 241)" },
+      { days: 100, icon: "💎", bn: "শতদিনের আলোকবর্তিকা", en: "100-Day Pillar of Light", descBn: "১০০ দিন একনিষ্ঠ নামাজীর মর্যাদা", descEn: "100 days of steadfast prayers" }
+    ];
+
+    let namazStreak = parseInt(SafeStorage.getItem("noor_namaz_streak") || "0");
+    let namazBestStreak = parseInt(SafeStorage.getItem("noor_namaz_best_streak") || "0");
+    let namazTotalPrayers = parseInt(SafeStorage.getItem("noor_namaz_total_prayers") || "0");
+    let namazLastCompletedDate = SafeStorage.getItem("noor_namaz_last_completed_date") || "";
+
+    function initNamazStreak() {
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (namazLastCompletedDate && namazLastCompletedDate !== todayStr) {
+        const last = new Date(namazLastCompletedDate);
+        const curr = new Date(todayStr);
+        const diffDays = Math.round((curr - last) / (1000 * 60 * 60 * 24));
+        if (diffDays > 1) {
+          // Streak broke if more than 1 day skipped
+          namazStreak = 0;
+          SafeStorage.setItem("noor_namaz_streak", "0");
+        }
+      }
+      updateNamazStreakUI();
+    }
+
+    function getCurrentNamazMilestone(days) {
+      let current = NAMAZ_MILESTONES[0];
+      for (let i = 0; i < NAMAZ_MILESTONES.length; i++) {
+        if (days >= NAMAZ_MILESTONES[i].days) {
+          current = NAMAZ_MILESTONES[i];
+        }
+      }
+      return current;
+    }
+
+    function getNextNamazMilestone(days) {
+      for (let i = 0; i < NAMAZ_MILESTONES.length; i++) {
+        if (days < NAMAZ_MILESTONES[i].days) {
+          return NAMAZ_MILESTONES[i];
+        }
+      }
+      return null;
+    }
+
+    function updateNamazStreakUI() {
+      const bnDigits = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+      const dispStreak = currentLang === "bn" ? bnDigits(namazStreak) : namazStreak;
+      const dispBest = currentLang === "bn" ? bnDigits(namazBestStreak) : namazBestStreak;
+      const dispTotal = currentLang === "bn" ? bnDigits(namazTotalPrayers) : namazTotalPrayers;
+
+      // Title & Subtitle
+      const titleEl = document.getElementById("namaz-streak-title");
+      if (titleEl) {
+        titleEl.textContent = currentLang === "bn" ? `${dispStreak} দিনের নামাজ ধারাবাহিকতা` : `${dispStreak}-Day Prayer Streak`;
+      }
+
+      const currMilestone = getCurrentNamazMilestone(namazStreak);
+      const nextMilestone = getNextNamazMilestone(namazStreak);
+
+      const subEl = document.getElementById("namaz-streak-sub");
+      if (subEl) {
+        const milestoneName = currentLang === "bn" ? currMilestone.bn : currMilestone.en;
+        subEl.textContent = currentLang === "bn" ? `বর্তমান মাইলস্টোন: ${milestoneName} ${currMilestone.icon}` : `Milestone: ${milestoneName} ${currMilestone.icon}`;
+      }
+
+      // Progress bar towards next milestone
+      const nextLabelEl = document.getElementById("milestone-next-label");
+      const nextPercentEl = document.getElementById("milestone-next-percent");
+      const barEl = document.getElementById("namaz-milestone-bar");
+
+      if (nextMilestone) {
+        const prevDays = currMilestone.days <= namazStreak ? currMilestone.days : 0;
+        const targetDays = nextMilestone.days;
+        const progress = Math.min(100, Math.max(0, Math.round(((namazStreak - prevDays) / (targetDays - prevDays)) * 100)));
+        const remDays = targetDays - namazStreak;
+
+        if (nextLabelEl) {
+          const nextName = currentLang === "bn" ? nextMilestone.bn : nextMilestone.en;
+          nextLabelEl.textContent = currentLang === "bn" ? `পরবর্তী লক্ষ্য: ${bnDigits(targetDays)} দিন (${nextName}) • আর ${bnDigits(remDays)} দিন বাকি` : `Next Target: ${targetDays} Days (${nextName}) • ${remDays} days left`;
+        }
+        if (nextPercentEl) {
+          nextPercentEl.textContent = currentLang === "bn" ? `${bnDigits(progress)}%` : `${progress}%`;
+        }
+        if (barEl) {
+          barEl.style.width = `${progress}%`;
+        }
+      } else {
+        if (nextLabelEl) nextLabelEl.textContent = currentLang === "bn" ? "মাশাআল্লাহ! আপনি সর্বোচ্চ মাইলস্টোনে আছেন! 👑" : "MashaAllah! Highest Milestone Achieved! 👑";
+        if (nextPercentEl) nextPercentEl.textContent = "100%";
+        if (barEl) barEl.style.width = "100%";
+      }
+
+      // Stats Grid
+      if (document.getElementById("namaz-stat-current")) {
+        document.getElementById("namaz-stat-current").textContent = currentLang === "bn" ? `${dispStreak} দিন` : `${dispStreak} Days`;
+      }
+      if (document.getElementById("namaz-stat-best")) {
+        document.getElementById("namaz-stat-best").textContent = currentLang === "bn" ? `${dispBest} দিন` : `${dispBest} Days`;
+      }
+      if (document.getElementById("namaz-stat-total")) {
+        document.getElementById("namaz-stat-total").textContent = currentLang === "bn" ? `${dispTotal} ওয়াক্ত` : `${dispTotal} Waqt`;
+      }
+
+      // Today's 5/5 completed banner
+      const saved = JSON.parse(SafeStorage.getItem(getTodayKey()) || "{}");
+      const doneCount = ["fajr", "dhuhr", "asr", "maghrib", "isha"].filter(k => saved[k]).length;
+      const bannerEl = document.getElementById("namaz-completed-banner");
+      if (bannerEl) {
+        bannerEl.style.display = doneCount === 5 ? "flex" : "none";
+      }
+    }
+
+    function openMilestonesModal() {
+      const container = document.getElementById("milestones-list-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const bnDigits = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+      NAMAZ_MILESTONES.forEach(m => {
+        const isUnlocked = namazStreak >= m.days;
+        const row = document.createElement("div");
+        row.className = `milestone-item-row ${isUnlocked ? 'unlocked' : ''}`;
+
+        const title = currentLang === "bn" ? m.bn : m.en;
+        const desc = currentLang === "bn" ? m.descBn : m.descEn;
+        const reqStr = currentLang === "bn" ? `${bnDigits(m.days)} দিন` : `${m.days} Days`;
+        const statusBadge = isUnlocked ? (currentLang === "bn" ? "✅ অর্জিত" : "✅ Unlocked") : `🔒 ${reqStr}`;
+
+        row.innerHTML = `
+          <div class="milestone-item-icon">${m.icon}</div>
+          <div class="milestone-item-info">
+            <div class="milestone-item-title">${title} (${reqStr})</div>
+            <div class="milestone-item-desc">${desc}</div>
+          </div>
+          <div class="milestone-status-badge">${statusBadge}</div>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById("milestones-modal").classList.add("active");
+      triggerVibration(25);
+    }
+
+    function closeMilestonesModal() {
+      document.getElementById("milestones-modal").classList.remove("active");
+      triggerVibration(15);
+    }
+
+    /* Fast & Robust Tasbih Button Touch & Pointer Handlers */
+    let lastTasbihTapTime = 0;
+    function handleTasbihPointer(e) {
+      const now = Date.now();
+      if (now - lastTasbihTapTime < 75) return;
+      lastTasbihTapTime = now;
+      incrementTasbih();
+    }
+
+    function handleTasbihClick(e) {
+      const now = Date.now();
+      if (now - lastTasbihTapTime < 110) return;
+      lastTasbihTapTime = now;
+      incrementTasbih();
+    }
+
+    function togglePrayerCheck(prayerKey) {
+      const key = getTodayKey();
+      const saved = JSON.parse(SafeStorage.getItem(key) || "{}");
+      const isNowChecked = !saved[prayerKey];
+      saved[prayerKey] = isNowChecked;
+      SafeStorage.setItem(key, JSON.stringify(saved));
+
+      // Update total lifetime prayers
+      if (isNowChecked) {
+        namazTotalPrayers++;
+      } else {
+        namazTotalPrayers = Math.max(0, namazTotalPrayers - 1);
+      }
+      SafeStorage.setItem("noor_namaz_total_prayers", namazTotalPrayers.toString());
+
+      triggerVibration(30);
+      if (isNowChecked) playChime(659.25, "sine", 0.22);
+
+      // Check 5/5 daily streak completion
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const list = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+      const doneCount = list.filter(k => saved[k]).length;
+
+      if (doneCount === 5) {
+        if (namazLastCompletedDate !== todayStr) {
+          if (namazLastCompletedDate) {
+            const last = new Date(namazLastCompletedDate);
+            const curr = new Date(todayStr);
+            const diffDays = Math.round((curr - last) / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) {
+              namazStreak += 1;
+            } else {
+              namazStreak = 1;
+            }
+          } else {
+            namazStreak = 1;
+          }
+          namazLastCompletedDate = todayStr;
+          SafeStorage.setItem("noor_namaz_last_completed_date", todayStr);
+          SafeStorage.setItem("noor_namaz_streak", namazStreak.toString());
+
+          if (namazStreak > namazBestStreak) {
+            namazBestStreak = namazStreak;
+            SafeStorage.setItem("noor_namaz_best_streak", namazBestStreak.toString());
+          }
+
+          // Celebration!
+          triggerVibration(350);
+          playChime(783.99, "sine", 0.55);
+          showToast(currentLang === "bn" ? `আলহামদুলিল্লাহ! আজকের ৫ ওয়াক্ত নামাজ সম্পন্ন! 🔥 স্ট্রিক: ${namazStreak} দিন` : `Alhamdulillah! All 5 prayers completed! 🔥 Streak: ${namazStreak} days`);
+        }
+      } else if (namazLastCompletedDate === todayStr) {
+        // User unchecked a prayer after achieving 5/5 today
+        namazLastCompletedDate = "";
+        SafeStorage.setItem("noor_namaz_last_completed_date", "");
+        namazStreak = Math.max(0, namazStreak - 1);
+        SafeStorage.setItem("noor_namaz_streak", namazStreak.toString());
+      }
+
+      loadTracker();
+      updateNamazStreakUI();
+    }
+
+    function togglePrayerReminder(prayerKey, btn) {
+      btn.classList.toggle("active");
+      const isActive = btn.classList.contains("active");
+      showToast(isActive ? `Reminder ON for ${prayerKey}` : `Reminder OFF for ${prayerKey}`);
+      triggerVibration(20);
+    }
+
+
+    /* ================= TASBIH & GUIDE ACTIONS ================= */
+    function updateTasbihUI() {
+      const d = TAZBIH_GUIDE[dhikrIndex];
+      document.getElementById("tasbih-arabic").textContent = d.arabic;
+      document.getElementById("tasbih-trans").textContent = `${d[currentLang].trans} (${d[currentLang].meaning})`;
+      document.getElementById("tasbih-count").textContent = currentLang === "bn" ? tasbihCount.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : tasbihCount;
+      const targetStr = tasbihTarget > 0 ? `${STRINGS[currentLang].target}: ${currentLang === 'bn' ? tasbihTarget.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : tasbihTarget}` : STRINGS[currentLang].freeCount;
+      document.getElementById("tasbih-target-label").textContent = targetStr;
+      updateProgressRing(tasbihCount, tasbihTarget);
+    }
+
+    function incrementTasbih() {
+      tasbihCount++;
+      todayBeads++;
+      lifetimeBeads++;
+
+      SafeStorage.setItem("noor_tasbih_count", tasbihCount.toString());
+      SafeStorage.setItem("sakinah_today_beads", todayBeads.toString());
+      SafeStorage.setItem("sakinah_lifetime_beads", lifetimeBeads.toString());
+
+      triggerVibration(25);
+      if (soundEnabled) playChime(523.25, "sine", 0.08);
+
+      // Button visual feedback pulse
+      const bodyEl = document.getElementById("counter-touch-body-el");
+      if (bodyEl) {
+        bodyEl.classList.add("active-pulse");
+        setTimeout(() => bodyEl.classList.remove("active-pulse"), 80);
+      }
+
+      const bnDigits = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+      if (tasbihTarget > 0 && tasbihCount === tasbihTarget) {
+        triggerVibration(250);
+        playChime(783.99, "sine", 0.45);
+        showToast(currentLang === "bn" ? `মাশাআল্লাহ! ${bnDigits(tasbihTarget)} বার তসবিহ সম্পন্ন হয়েছে! ✨` : `MashaAllah! Target of ${tasbihTarget} completed! ✨`);
+      }
+
+      updateTasbihUI();
+      updateStreakUI();
+    }
+
+    function resetTasbih() {
+      tasbihCount = 0;
+      SafeStorage.setItem("noor_tasbih_count", "0");
+      triggerVibration(50);
+      showToast(currentLang === "bn" ? "কাউন্টার রিসেট হয়েছে" : "Counter reset to 0");
+      updateTasbihUI();
+    }
+
+    function setTasbihTarget(val, pill) {
+      tasbihTarget = val;
+      SafeStorage.setItem("noor_tasbih_target", val.toString());
+      document.querySelectorAll(".preset-pills .preset-pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      triggerVibration(25);
+      updateTasbihUI();
+    }
+
+    function cycleDhikr() {
+      dhikrIndex = (dhikrIndex + 1) % TAZBIH_GUIDE.length;
+      triggerVibration(25);
+      updateTasbihUI();
+    }
+
+    function selectDhikrFromGuide(index) {
+      dhikrIndex = index;
+      tasbihCount = 0;
+      updateTasbihUI();
+      triggerVibration(30);
+      playChime(659.25, "sine", 0.2);
+      showToast(currentLang === "bn" ? "তাসবিহ নির্বাচিত হয়েছে!" : "Dhikr selected for counter!");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderTazbihGuide() {
+      const container = document.getElementById("guide-items-container");
+      container.innerHTML = "";
+
+      TAZBIH_GUIDE.forEach((item, idx) => {
+        const info = item[currentLang];
+        const card = document.createElement("div");
+        card.className = "guide-item";
+        card.onclick = () => selectDhikrFromGuide(idx);
+        card.innerHTML = `
+          <div class="guide-arabic">${item.arabic}</div>
+          <div class="guide-trans">${info.trans}</div>
+          <div class="guide-meaning">${info.meaning}</div>
+          <div class="guide-virtue">✨ ${info.virtue}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleTasbihSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById("btn-sound").textContent = soundEnabled ? "🔔" : "🔕";
+      showToast(soundEnabled ? (currentLang === "bn" ? "সুর চালু" : "Audio chime enabled") : (currentLang === "bn" ? "মিউট করা হয়েছে" : "Muted"));
+      triggerVibration(20);
+    }
+
+    /* ================= SETTINGS & NAVIGATION ================= */
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll("nav.bottom-nav .nav-item").forEach(n => n.classList.remove("active"));
+
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add("active");
+
+      const navIdx = ["prayer", "motivation", "tasbih", "settings"].indexOf(tabId);
+      if (navIdx >= 0) {
+        document.querySelectorAll("nav.bottom-nav .nav-item")[navIdx].classList.add("active");
+      }
+      triggerVibration(20);
+      window.scrollTo(0, 0);
+    }
+
+    function onCityChange(key) {
+      const c = CITIES[key];
+      if (!c) return;
+      userConfig.cityKey = key;
+      userConfig.lat = c.lat;
+      userConfig.lng = c.lng;
+      userConfig.tz = c.tz;
+      userConfig.cityName = c.name;
+
+      SafeStorage.setItem("noor_city", key);
+      SafeStorage.setItem("noor_lat", c.lat);
+      SafeStorage.setItem("noor_lng", c.lng);
+      SafeStorage.setItem("noor_tz", c.tz);
+      SafeStorage.setItem("noor_city_name", c.name);
+
+      initApp();
+      showToast(currentLang === "bn" ? `লোকেশন নির্ধারণ: ${c.bn}` : `Location set to ${c.name}`);
+    }
+
+    function onMadhhabChange(val) {
+      userConfig.isHanafi = parseInt(val);
+      SafeStorage.setItem("noor_hanafi", val);
+      updatePrayerSchedule();
+      scheduleNativeBackgroundAlarms();
+      showToast(userConfig.isHanafi === 1 ? (currentLang === "bn" ? "হানাফি আসরের ওয়াক্ত সক্রিয়" : "Asr: Hanafi applied") : (currentLang === "bn" ? "শাফেয়ী আসরের ওয়াক্ত সক্রিয়" : "Asr: Shafi'i applied"));
+    }
+
+    function onMethodChange(methodKey) {
+      userConfig.method = methodKey;
+      SafeStorage.setItem("noor_method", methodKey);
+      updatePrayerSchedule();
+      scheduleNativeBackgroundAlarms();
+      showToast(currentLang === "bn" ? "হিসাব পদ্ধতি হালনাগাদ করা হয়েছে" : "Calculation updated");
+    }
+
+    function detectGPSLocation() {
+      if (!navigator.geolocation) {
+        showToast("Geolocation not supported");
+        return;
+      }
+      showToast(currentLang === "bn" ? "জিপিএস লোকেশন নেওয়া হচ্ছে..." : "Acquiring GPS location...");
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          userConfig.lat = pos.coords.latitude;
+          userConfig.lng = pos.coords.longitude;
+          userConfig.cityKey = "gps";
+          userConfig.cityName = "Current GPS Location";
+
+          SafeStorage.setItem("noor_city", "gps");
+          SafeStorage.setItem("noor_lat", userConfig.lat);
+          SafeStorage.setItem("noor_lng", userConfig.lng);
+          SafeStorage.setItem("noor_city_name", userConfig.cityName);
+
+          initApp();
+          showToast(currentLang === "bn" ? "জিপিএস দিয়ে লোকেশন আপডেট সম্পন্ন! 📍" : "Location updated from GPS! 📍");
+          playChime(659.25, "sine", 0.3);
+        },
+        err => {
+          showToast("GPS error: " + (err.message || "Permission denied"));
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    window.addEventListener("DOMContentLoaded", initApp);
+  
+    /* Service Worker & iOS Safari PWA Detection */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    function checkIosPrompt() {
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+      const dismissed = SafeStorage.getItem('ios_banner_dismissed') === 'true';
+
+      if (isIos && !isStandalone && !dismissed) {
+        const banner = document.getElementById('ios-install-banner');
+        if (banner) {
+          setTimeout(() => {
+            banner.style.display = 'block';
+          }, 2000);
+        }
+      }
+    }
+
+    function dismissIosBanner() {
+      const banner = document.getElementById('ios-install-banner');
+      if (banner) banner.style.display = 'none';
+      SafeStorage.setItem('ios_banner_dismissed', 'true');
+    }
+
+    document.addEventListener('DOMContentLoaded', checkIosPrompt);
+
+  
+    /* First Touch Audio Unlock for iOS Safari */
+    function unlockAudioOnFirstInteraction() {
+      const audio = document.getElementById('azan-audio-player');
+      if (audio) audio.load();
+      if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
+        sharedAudioCtx.resume();
+      }
+      document.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
+      document.removeEventListener('click', unlockAudioOnFirstInteraction);
+    }
+    document.addEventListener('touchstart', unlockAudioOnFirstInteraction, { once: true });
+    document.addEventListener('click', unlockAudioOnFirstInteraction, { once: true });
+
+    /* Native PWA Prompt / Apple Modal Handler */
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('btn-header-install');
+      if (btn) btn.style.display = 'flex';
+    });
+
+    function showAppInstallInstructions() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(() => {
+          deferredInstallPrompt = null;
+        });
+      } else {
+        openIosGuideModal();
+      }
+    }
+
+    function openIosGuideModal() {
+      const modal = document.getElementById('ios-guide-modal');
+      if (modal) {
+        modal.classList.add('active');
+        triggerVibration(20);
+      }
+    }
+
+    function closeIosGuideModal() {
+      const modal = document.getElementById('ios-guide-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        triggerVibration(15);
+      }
+    }
+
+  </script>
+  <!-- Full Story Reader Modal -->
+  <div class="story-modal-overlay" id="story-reader-modal" onclick="if(event.target===this) closeStoryModal()">
+    <div class="story-sheet">
+      <div class="story-sheet-header">
+        <div class="story-sheet-title" id="story-sheet-title">Story Title</div>
+        <button class="story-close-btn" onclick="closeStoryModal()">✕</button>
+      </div>
+      <div class="story-sheet-body" id="story-sheet-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Namaz Milestones Modal -->
+  <div class="story-modal-overlay" id="milestones-modal" onclick="if(event.target===this) closeMilestonesModal()">
+    <div class="story-sheet">
+      <div class="story-sheet-header">
+        <div class="story-sheet-title" id="milestone-modal-header-title">🏅 নামাজ ধারাবাহিকতা ও মাইলস্টোন</div>
+        <button class="story-close-btn" onclick="closeMilestonesModal()">✕</button>
+      </div>
+      <div class="story-sheet-body">
+        <p style="font-size: 0.85rem; color: var(--gold-light); margin-bottom: 16px;" id="milestone-modal-sub">
+          প্রতিদিন ৫ ওয়াক্ত নামাজ আদায় করে অনন্য আধ্যাত্মিক মাইলস্টোন এবং নবীজি ﷺ-এর বিশেষ সুসংবাদ অর্জন করুন:
+        </p>
+        <div id="milestones-list-container">
+          <!-- Dynamically populated -->
+        </div>
+        <div style="margin-top: 18px; text-align: center;">
+          <button class="btn-primary" style="margin: 0 auto;" onclick="closeMilestonesModal()" id="lbl-close-milestones">
+            বন্ধ করুন / Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- iOS Safari Install Prompt -->
+  <div class="ios-install-banner" id="ios-install-banner">
+    <div class="ios-install-content">
+      <img src="icon-192.png" alt="App Icon" class="ios-app-icon-thumb">
+      <div class="ios-install-text">
+        <strong id="lbl-ios-title">iPhone-এ অ্যাপ হিসেবে ইন্সটল করুন</strong>
+        <span id="lbl-ios-desc">নিচের Share বোতামে (⬆️) ট্যাপ করে <strong>"Add to Home Screen"</strong> নির্বাচন করুন।</span>
+      </div>
+      <button class="ios-install-close" onclick="dismissIosBanner()">✕</button>
+    </div>
+  </div>
+
+
+  <!-- Apple iPhone / PWA Install Guide Modal -->
+  <div class="story-modal-overlay" id="ios-guide-modal" onclick="if(event.target===this) closeIosGuideModal()">
+    <div class="story-sheet">
+      <div class="story-sheet-header">
+        <div class="story-sheet-title" id="lbl-ios-modal-title">📲 Install on iPhone / Android</div>
+        <button class="story-close-btn" onclick="closeIosGuideModal()">✕</button>
+      </div>
+      <div class="story-sheet-body">
+        <div style="text-align: center; margin-bottom: 16px;">
+          <img src="icon-192.png" alt="App Icon" style="width: 64px; height: 64px; border-radius: 16px; border: 2px solid var(--gold); margin: 0 auto 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.5);">
+          <h3 style="font-size: 1.1rem; color: #FFF; font-weight: 800;">Namaz Reminder (নামাজ রিমাইন্ডার)</h3>
+          <p style="font-size: 0.78rem; color: var(--gold-light);" id="lbl-ios-modal-sub">
+            Install on your phone's home screen for full-screen offline use without App Store!
+          </p>
+        </div>
+
+        <!-- Steps for Apple iPhone -->
+                <!-- Direct 1-Click APK Download for Android -->
+        <div style="margin-bottom: 20px; text-align: center;">
+          <a href="https://github.com/mustafiz-cell/namaz-reminder/releases/download/v1.0.0/NamazReminder.apk" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px; font-size: 0.92rem; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+            <span>🤖</span> <span>Download Android App (.APK)</span>
+          </a>
+          <span style="display: block; font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">১ ক্লিকে সরাসরি ডাউনলোড (কোনো সাইন-আপ লাগবে না)</span>
+        </div>
+
+        <div style="font-size: 0.88rem; font-weight: 700; color: #FFFFFF; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+          <span>🍏</span> <span>iPhone / iPad ব্যবহারকারীদের জন্য:</span>
+        </div>
+<div id="ios-steps-container">
+          <div class="ios-step-box">
+            <div class="ios-step-num">১</div>
+            <div class="ios-step-desc">
+              <strong style="color: #FFF;">Safari ব্রাউজারে খুলুন:</strong><br>
+              আইফোনের Safari ব্রাউজারের নিচে <strong>Share (শেয়ার ⬆️)</strong> আইকনে ট্যাপ করুন।
+            </div>
+          </div>
+          <div class="ios-step-box">
+            <div class="ios-step-num">২</div>
+            <div class="ios-step-desc">
+              <strong style="color: #FFF;">হোম স্ক্রিনে যোগ করুন:</strong><br>
+              তালিকাটি স্ক্রল করে <strong>"Add to Home Screen" (➕)</strong> অপশনে চাপ দিন।
+            </div>
+          </div>
+          <div class="ios-step-box">
+            <div class="ios-step-num">৩</div>
+            <div class="ios-step-desc">
+              <strong style="color: #FFF;">সম্পন্ন করুন:</strong><br>
+              উপরের ডানে <strong>"Add"</strong> চাপলেই আপনার আইফোনে অ্যাপ হিসেবে সেভ হয়ে যাবে!
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px; text-align: center;">
+          <button class="btn-primary" style="margin: 0 auto;" onclick="closeIosGuideModal()">
+            বুঝেছি / Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

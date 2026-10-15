@@ -1,0 +1,24 @@
+{
+  "name": "Namaz Reminder (নামাজ রিমাইন্ডার)",
+  "short_name": "Namaz Reminder",
+  "description": "Prayer Times, Azan, Prophetic Stories, Tasbih & Namaz Streak System",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070D19",
+  "theme_color": "#070D19",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
