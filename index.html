@@ -1696,6 +1696,9 @@
       if (p !== undefined) {
         p.then(() => {
           isCurrentlyPlaying = true;
+          if (window.AndroidApp && typeof window.AndroidApp.setAzanPlayingState === "function") {
+            window.AndroidApp.setAzanPlayingState(true);
+          }
           showPlayerUI(true);
           showToast(STRINGS[currentLang].toastAzanPlaying);
           setupMediaSession(STRINGS[currentLang].appTitle, STRINGS[currentLang].statusAzanPlaying);
@@ -1718,6 +1721,9 @@
       if (p !== undefined) {
         p.then(() => {
           isCurrentlyPlaying = true;
+          if (window.AndroidApp && typeof window.AndroidApp.setAzanPlayingState === "function") {
+            window.AndroidApp.setAzanPlayingState(true);
+          }
           showPlayerUI(true);
           expandDuaCard();
           if (!isAutoFollow) showToast(STRINGS[currentLang].toastDuaPlaying);
@@ -1755,11 +1761,27 @@
         audioPlayer.currentTime = 0;
       }
       isCurrentlyPlaying = false;
+      if (window.AndroidApp && typeof window.AndroidApp.setAzanPlayingState === "function") {
+        window.AndroidApp.setAzanPlayingState(false);
+      }
       showPlayerUI(false);
       if (!isNaturalEnd) {
         showToast(STRINGS[currentLang].toastAzanStopped);
       }
     }
+
+    // Hardware volume button listener to instantly mute/stop audio
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "VolumeDown" || e.key === "VolumeUp" || e.key === "VolumeMute" || e.keyCode === 174 || e.keyCode === 175) {
+        if (isCurrentlyPlaying) {
+          stopAudioPlayback();
+          if (window.AndroidApp && typeof window.AndroidApp.stopAzanNow === "function") {
+            window.AndroidApp.stopAzanNow();
+          }
+          e.preventDefault();
+        }
+      }
+    });
 
     function showPlayerUI(show) {
       const box = document.getElementById("player-box");
@@ -2227,6 +2249,10 @@
     window.DUA_START_TIME = DUA_START_TIME;
     window.DUA_MEANING_TIME = DUA_MEANING_TIME;
     window.TOTAL_AUDIO_TIME = TOTAL_AUDIO_TIME;
+    window.stopActiveAzan = stopAudioPlayback;
+    window.stopAudioPlayback = stopAudioPlayback;
+    window.startFullAzanSequence = startFullAzanSequence;
+    window.startDuaOnly = startDuaOnly;
 
     /* ================= INITIALIZATION ================= */
     window.addEventListener("DOMContentLoaded", () => {
